@@ -20,13 +20,13 @@ module.exports = gql`
       Add a user in database. 
       Based on his role, add also a student or a teacher. Use '...on Student' or '...on Teacher' to get results from this mutation
     """
-    addUser(user: UserInput): TeacherOrStudent
+    addUser(user: AccountInput): TeacherOrStudent
   }
 
   """
-  A type that describes the new user. This type should contain all information that an user can provides to create an account
+  An input that describes a new account. This input should contain all information that a client can provides to create an account
   """
-  input UserInput {
+  input AccountInput {
     name: String!
     email: String!
     hash: String!
