@@ -11,7 +11,7 @@ module.exports = gql`
       This should require admin in the future.
     """
     users: [User]
-    "return a list of users that its role is TEACHER"
+    "return a list of teachers"
     teachers: [Teacher]
   }
 
