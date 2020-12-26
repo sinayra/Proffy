@@ -13,6 +13,7 @@ module.exports = gql`
     users: [User]
     "return a list of teachers"
     teachers: [Teacher]
+    students: [Student]
   }
 
   type Mutation {
@@ -20,7 +21,7 @@ module.exports = gql`
       Add a user in database. 
       Based on his role, add also a student or a teacher. Use '...on Student' or '...on Teacher' to get results from this mutation
     """
-    addUser(user: AccountInput): TeacherOrStudent
+    addUser(account: AccountInput): TeacherOrStudent
   }
 
   """
@@ -29,7 +30,7 @@ module.exports = gql`
   input AccountInput {
     name: String!
     email: String!
-    hash: String!
+    password: String!
     whatsapp: String
     avatar: String
     role: Role!
@@ -66,7 +67,7 @@ module.exports = gql`
     _id: ID!
     "reference a previous user account that has been created"
     user: User!
-    favorite: [Teacher]
+    favorites: [Teacher]
     connected: [Teacher]
   }
 

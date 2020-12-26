@@ -11,8 +11,8 @@ const TeacherAPI = require('./datasource/teacher');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 
-const { userModel: UserCollection } = require('./model/user');
-const { teacherModel: TeacherCollection } = require('./model/teacher');
+const UserCollection = require('./model/user');
+const TeacherCollection = require('./model/teacher');
 const StudentCollection = require('./model/student');
 
 const app = express();
@@ -34,7 +34,8 @@ const server = new ApolloServer({
 
 mongoose.connect(`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@localhost:27017/${process.env.MONGODB_DATABASE}`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 });
 mongoose.connection.on('connected', function () {
     console.log('Mongoose default connection open to localhost');
@@ -48,6 +49,7 @@ mongoose.connection.on('error', function (err) {
     console.log('Mongoose default connection error: ' + err);
 });
 
+app.use(express.static('./assets')); 
 server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = http.createServer(app);

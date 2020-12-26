@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const { userSchema } = require('./user');
-const { teacherSchema } = require('./teacher');
 
 const studentSchema = new mongoose.Schema({
-    user: userSchema,
-    favorite: [teacherSchema],
-    connected: [teacherSchema]
+    user_id: {
+        type: String,
+        required: true
+    },
+    favorite_teacher_ids: [String],
+    connected_teacher_ids: [String]
 });
 
 module.exports = mongoose.model('student', studentSchema);

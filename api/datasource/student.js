@@ -9,15 +9,16 @@ class StudentAPI extends DataSource {
 
     initialize(config) { }
 
-    getStudents() {
-        return this.db.find();
+    async getStudents() {
+        return await this.db.find();
     }
 
     async addStudent(user) {
-        const newStudent = await this.db.create({
-            user
-        });
-        return newStudent;
+        return await this.db.create({ user_id: user._id });
+    }
+
+    async getStudentById(id) {
+        return await this.db.findById(id);
     }
 
 }

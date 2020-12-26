@@ -9,15 +9,16 @@ class TeacherAPI extends DataSource {
 
     initialize(config) { }
 
-    getTeachers() {
-        return this.db.find();
+    async getTeachers() {
+        return await this.db.find();
     }
 
     async addTeacher(user) {
-        const newTeacher = await this.db.create({
-            user
-        });
-        return newTeacher;
+        return await this.db.create({ user_id: user._id });
+    }
+
+    async getTeacherById(id) {
+        return await this.db.findById(id);
     }
 
 }

@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
-const { userSchema } = require('./user');
 
 const teacherSchema = new mongoose.Schema({
-    user: userSchema,
+    user_id: {
+        type: String,
+        required: true
+    },
     bio: String,
     price: String,
     area: [String],
@@ -10,7 +12,4 @@ const teacherSchema = new mongoose.Schema({
     subject: String
 });
 
-module.exports = { 
-    teacherModel: mongoose.model('teacher', teacherSchema),
-    teacherSchema
-} ;
+module.exports = mongoose.model('teacher', teacherSchema);
