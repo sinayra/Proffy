@@ -10,6 +10,7 @@ const StudentAPI = require('./datasource/student');
 const TeacherAPI = require('./datasource/teacher');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
+const auth = require('./util/auth');
 
 const UserCollection = require('./model/user');
 const TeacherCollection = require('./model/teacher');
@@ -30,6 +31,22 @@ const server = new ApolloServer({
     dataSources,
     typeDefs,
     resolvers,
+    context: async ({ req, res }) => {
+        let user = null;
+
+        if (req && req.cookies) {
+            const token = req.cookies.token;
+            if (token) {
+                const payload = auth.verifyToken(token);
+                user = payload;
+            }
+        }
+
+        return {
+            res,
+            user
+        }
+    }
 });
 
 mongoose.connect(`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@localhost:27017/${process.env.MONGODB_DATABASE}`, {
@@ -49,7 +66,7 @@ mongoose.connection.on('error', function (err) {
     console.log('Mongoose default connection error: ' + err);
 });
 
-app.use(express.static('./assets')); 
+app.use(express.static('./assets'));
 server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = http.createServer(app);
