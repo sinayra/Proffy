@@ -1,4 +1,5 @@
 const { DataSource } = require('apollo-datasource');
+const authUtils = require('../util/auth');
 const _ = require('lodash');
 
 class UserAPI extends DataSource {
@@ -14,14 +15,14 @@ class UserAPI extends DataSource {
     }
 
     async addUser(user) {
-        let {name, email, password, whatsapp, avatar, role} = user;
+        let { name, email, password, whatsapp, avatar, role } = user;
 
-        //logic to hash the password
-        const hash = password;
+        const hash = authUtils.hashPassword(password);
 
-        if(!avatar){
+        if (!avatar) {
             avatar = '/default-avatar.png';
         }
+        email = email.toLowerCase();
 
         return await this.db.create({
             name,
@@ -35,6 +36,10 @@ class UserAPI extends DataSource {
 
     async getUserById(id) {
         return await this.db.findById(id);
+    }
+
+    async getUserByEmail(email) {
+        return await this.db.findOne({ email });
     }
 
 }
