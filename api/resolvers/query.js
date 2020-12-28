@@ -38,4 +38,8 @@ module.exports = {
         return students;
     },
 
+    teacherByCurrentUser: async (parent, args, { dataSources, user }, info) => {
+        return await dataSources.teacherAPI.getTeacherByUser(user);
+    },
+
 }

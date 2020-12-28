@@ -12,7 +12,7 @@ const TeacherAPI = require('./datasource/teacher');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const auth = require('./util/auth');
-const { AuthDirective } = require('./directives/admin');
+const { RequiresRoleDirective } = require('./directives/role');
 
 const UserDBModel = require('./model/user');
 const TeacherDBModel = require('./model/teacher');
@@ -33,7 +33,7 @@ const server = new ApolloServer({
     playground: true,
     debug: true,
     schemaDirectives: {
-        requiresAdmin: AuthDirective
+        requiresRole: RequiresRoleDirective
     },
     dataSources,
     typeDefs,

@@ -21,6 +21,10 @@ class TeacherAPI extends DataSource {
         return await this.db.findById(id);
     }
 
+    async getTeacherByUser(user) {
+        return await this.db.findOne({ user_id: user._id });;
+    }
+
 }
 
 module.exports = TeacherAPI;

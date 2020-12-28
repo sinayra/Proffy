@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const createToken = (userInfo) =>
   JWT.sign(
     { 
-      sub: userInfo._id, 
+      _id: userInfo._id, 
       email: userInfo.email,
       role: userInfo.role
     }, 

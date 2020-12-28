@@ -1,25 +1,33 @@
-const { AuthenticationError, ForbiddenError } = require('apollo-server');
+const { AuthenticationError, ForbiddenError, ApolloError } = require('apollo-server');
 const auth = require('../util/auth');
 
 module.exports = {
-    signup: async (parent, { account }, { dataSources, res }, info) => {
+    signup: async (parent, { account }, { dataSources, res, user }, info) => {
+
+        if(user){
+            throw new ApolloError("You must logout before create a new account");
+        }
+
         const existingUser = await dataSources.userAPI.getUserByEmail(account.email.toLowerCase());
 
         if (existingUser) {
             throw new AuthenticationError("A user account with this email already exists");
         }
 
-        const user = await dataSources.userAPI.addUser(account);
+        if(account.role === 'ADMIN'){
+            throw new ForbiddenError("Cannot creates an admin account via client.");
+        }
 
-        let result;
+        const newUser = await dataSources.userAPI.addUser(account);
+
         if (account.role === 'STUDENT'){
-            result = await dataSources.studentAPI.addStudent(user);
+            await dataSources.studentAPI.addStudent(newUser);
         }
         else if (account.role === 'TEACHER'){
-            result = await dataSources.teacherAPI.addTeacher(user)
+            await dataSources.teacherAPI.addTeacher(newUser)
         }
 
-        const token = auth.createToken(user);
+        const token = auth.createToken(newUser);
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: true,
@@ -27,7 +35,7 @@ module.exports = {
         });
 
         return {
-            user
+            user: newUser
         }
     },
 
@@ -64,5 +72,5 @@ module.exports = {
         return {
             user: existingUser
         }
-    }
+    },
 };

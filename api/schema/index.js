@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
-  directive @requiresAdmin on FIELD_DEFINITION
+  directive @requiresRole(role: String) on FIELD_DEFINITION
 
   "Date in milliseconds"
   scalar Date
@@ -16,18 +16,24 @@ module.exports = gql`
     "return a list of teachers"
     teachers: [Teacher]
     students: [Student]
+    teacherByCurrentUser: Teacher @requiresRole(role: "TEACHER")
+    #studentByUser(user: User): Student
   }
 
   type Mutation {
-    signup(account: SigninInput): AuthPayload
+    signup(account: SignupInput!): AuthPayload
     logout: AuthPayload
-    login(account: LoginInput): AuthPayload
+    login(account: LoginInput!): AuthPayload
+    #updateTeacher(teacher: TeacherInput!)
+    #addFavoriteTeacher(teacherId: ID!)
+    #removeFavoriteTeacher(teacherId: ID!)
+    #addTeacherStudentConnection(teacherId: ID!)
   }
 
   """
   An input that describes a new account. This input should contain all information that a client can provides to create an account
   """
-  input SigninInput {
+  input SignupInput {
     name: String!
     email: String!
     password: String!
@@ -36,9 +42,22 @@ module.exports = gql`
     role: Role!
   }
 
+  """
+  An input that describes an existing account. 
+  """
   input LoginInput {
     email: String!
     password: String!
+  }
+
+  """
+  An input with all optional fields from Teacher
+  """
+  input TeacherInput {
+    bio: String
+    price: String
+    area: [Area]
+    day: [Date]
   }
 
   """
@@ -49,7 +68,7 @@ module.exports = gql`
     name: String!
     email: String!
     "Hash field is the user's password after being hashed. Requires admin account."
-    hash: String! @requiresAdmin
+    hash: String! @requiresRole(role: "ADMIN")
     whatsapp: String
     avatar: String
     role: Role!
