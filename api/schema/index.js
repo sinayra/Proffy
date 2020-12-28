@@ -2,6 +2,7 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
   directive @requiresRole(role: String) on FIELD_DEFINITION
+  directive @requiresAuthenticate on FIELD_DEFINITION
 
   "Date in milliseconds"
   scalar Date
@@ -17,14 +18,15 @@ module.exports = gql`
     teachers: [Teacher]
     students: [Student]
     teacherByCurrentUser: Teacher @requiresRole(role: "TEACHER")
-    #studentByUser(user: User): Student
+    studentByCurrentUser: Student @requiresRole(role: "STUDENT")
   }
 
   type Mutation {
     signup(account: SignupInput!): AuthPayload
     logout: AuthPayload
     login(account: LoginInput!): AuthPayload
-    #updateTeacher(teacher: TeacherInput!)
+    updateUser(userInput: UserInput!): User @requiresAuthenticate
+    updateTeacher(teacherInput: TeacherInput!): Teacher
     #addFavoriteTeacher(teacherId: ID!)
     #removeFavoriteTeacher(teacherId: ID!)
     #addTeacherStudentConnection(teacherId: ID!)
@@ -43,7 +45,7 @@ module.exports = gql`
   }
 
   """
-  An input that describes an existing account. 
+  An input with the required fields to authenticate
   """
   input LoginInput {
     email: String!
@@ -54,10 +56,22 @@ module.exports = gql`
   An input with all optional fields from Teacher
   """
   input TeacherInput {
+    _id: ID
     bio: String
     price: String
-    area: [Area]
-    day: [Date]
+    area: [Area!]
+    day: [Weekday!]
+  }
+
+  """
+  An input to update fields from User
+  """
+  input UserInput {
+    _id: ID
+    name: String
+    password: String
+    whatsapp: String
+    avatar: String
   }
 
   """
@@ -72,6 +86,7 @@ module.exports = gql`
     whatsapp: String
     avatar: String
     role: Role!
+    active: Boolean
   }
 
   type Teacher {
@@ -81,7 +96,7 @@ module.exports = gql`
     bio: String
     price: String
     area: [Area]
-    day: [Date]
+    day: [Weekday]
     subject: String @deprecated(
       reason: "A teacher can have more than one subject that he can teach, so this field will be remove soon. Use 'area' instead."
       )
@@ -117,11 +132,21 @@ module.exports = gql`
     ENGLISH
     GEOGRAPHY
     HISTORY
-    COMPUTER SCIENCE
+    COMPUTER_SCIENCE
     MATHEMATICS
     PHYSICS
-    PHYSICAL EDUCATION
-    ECONOMIC SCIENCES
+    PHYSICAL_EDUCATION
+    ECONOMIC_SCIENCES
+  }
+
+  enum Weekday {
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
   }
 
 `;

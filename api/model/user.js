@@ -3,12 +3,17 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        minLength: 1,
+        maxLength: 255
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        lowercase: true,
+        unique: true,
+        minLength: 1,
+        maxLength: 255
     },
     hash: {
         type: String,
@@ -25,7 +30,8 @@ const userSchema = new mongoose.Schema({
             },
             message: props => `${props.value} is not an acceptable account role`
         }
-    }
+    },
+    active: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('user', userSchema);

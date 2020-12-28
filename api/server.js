@@ -13,6 +13,7 @@ const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const auth = require('./util/auth');
 const { RequiresRoleDirective } = require('./directives/role');
+const { RequiresAuthenticateDirective } = require('./directives/authenticate');
 
 const UserDBModel = require('./model/user');
 const TeacherDBModel = require('./model/teacher');
@@ -33,7 +34,8 @@ const server = new ApolloServer({
     playground: true,
     debug: true,
     schemaDirectives: {
-        requiresRole: RequiresRoleDirective
+        requiresRole: RequiresRoleDirective,
+        requiresAuthenticate: RequiresAuthenticateDirective,
     },
     dataSources,
     typeDefs,
@@ -72,6 +74,8 @@ mongoose.connection.on('disconnected', function () {
 mongoose.connection.on('error', function (err) {
     console.log('Mongoose default connection error: ' + err);
 });
+
+mongoose.set('useFindAndModify', false);
 
 app.use(express.static('./assets'));
 server.applyMiddleware({ app, path: '/graphql' });

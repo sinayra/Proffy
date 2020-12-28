@@ -8,7 +8,7 @@ const teacherSchema = new mongoose.Schema({
     bio: String,
     price: String,
     area: [String],
-    day: [Date],
+    day: [String],
     subject: String
 });
 
