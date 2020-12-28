@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  directive @requiresAdmin on FIELD_DEFINITION
+
   "Date in milliseconds"
   scalar Date
 
@@ -46,8 +48,8 @@ module.exports = gql`
     _id: ID!
     name: String!
     email: String!
-    "This is user password after being hash"
-    hash: String!
+    "Hash field is the user's password after being hashed. Requires admin account."
+    hash: String! @requiresAdmin
     whatsapp: String
     avatar: String
     role: Role!

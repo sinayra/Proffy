@@ -11,10 +11,13 @@ module.exports = {
 
         const user = await dataSources.userAPI.addUser(account);
 
-        const result = (account.role === 'STUDENT' ?
-            await dataSources.studentAPI.addStudent(user) :
-            await dataSources.teacherAPI.addTeacher(user)
-        );
+        let result;
+        if (account.role === 'STUDENT'){
+            result = await dataSources.studentAPI.addStudent(user);
+        }
+        else if (account.role === 'TEACHER'){
+            result = await dataSources.teacherAPI.addTeacher(user)
+        }
 
         const token = auth.createToken(user);
         res.cookie('token', token, {

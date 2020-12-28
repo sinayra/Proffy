@@ -4,6 +4,7 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const http = require('http');
 const mongoose = require('mongoose');
+const cookieParser = require("cookie-parser");
 
 const UserAPI = require('./datasource/user');
 const StudentAPI = require('./datasource/student');
@@ -11,23 +12,29 @@ const TeacherAPI = require('./datasource/teacher');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const auth = require('./util/auth');
+const { AuthDirective } = require('./directives/admin');
 
-const UserCollection = require('./model/user');
-const TeacherCollection = require('./model/teacher');
-const StudentCollection = require('./model/student');
+const UserDBModel = require('./model/user');
+const TeacherDBModel = require('./model/teacher');
+const StudentDBModel = require('./model/student');
 
 const app = express();
 
 const dataSources = () => ({
-    userAPI: new UserAPI(UserCollection),
-    studentAPI: new StudentAPI(StudentCollection),
-    teacherAPI: new TeacherAPI(TeacherCollection)
+    userAPI: new UserAPI(UserDBModel),
+    studentAPI: new StudentAPI(StudentDBModel),
+    teacherAPI: new TeacherAPI(TeacherDBModel)
 });
+
+app.use(cookieParser());
 
 const server = new ApolloServer({
     introspection: true,
     playground: true,
     debug: true,
+    schemaDirectives: {
+        requiresAdmin: AuthDirective
+    },
     dataSources,
     typeDefs,
     resolvers,
