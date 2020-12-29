@@ -83,11 +83,7 @@ module.exports = {
             userId = user._id;
         }
 
-        console.log(userId);
-
         let existingUser = await dataSources.userAPI.getUserById(userId);
-
-        console.log(existingUser);
 
         if (existingUser) {
             existingUser = await dataSources.userAPI.updateUser(userId, userInput);
@@ -99,35 +95,54 @@ module.exports = {
     },
 
     updateTeacher: async (parent, { teacherInput }, { dataSources, user }, info) => {
-        let teacherId = null;
+        let existingTeacherId = null;
 
         if (user.role === "TEACHER") {
             const teacher = await dataSources.teacherAPI.getTeacherByUser(user);
-            teacherId = teacher ? teacher._id : null;
+            existingTeacherId = teacher ? teacher._id : null;
         }
-        else if (user.role === "ADMIN") {
+        else {
             if (!teacherInput._id) {
                 throw new UserInputError("Teacher id is missing");
             }
             const teacher = await dataSources.teacherAPI.getTeacherById(teacherInput._id);
             if (!teacher) {
-                teacherId = null;
+                existingTeacherId = null;
             }
             else {
-                teacherId = teacherInput._id;
+                existingTeacherId = teacherInput._id;
                 delete teacherInput._id;
             }
         }
 
-        if (teacherId) {
-            let teacher = await dataSources.teacherAPI.updateTeacher(teacherId, teacherInput);
-
-            teacher.user = await dataSources.userAPI.getUserById(user._id);
-            delete teacher.user_id;
-
-            return teacher;
+        if (existingTeacherId) {
+            return await dataSources.teacherAPI.updateTeacher(existingTeacherId, teacherInput);
         }
 
         throw new ApolloError("Teacher not found");
     },
+
+    toogleFavoriteTeacher: async (parent, { teacherId, studentId }, { dataSources, user }, info) => {
+        let existingStudentId = null;
+
+        if (user.role === 'STUDENT') {
+            const student = await dataSources.studentAPI.getStudentById(user._id);
+            existingStudentId = student ? student._id : null;
+        }
+        else {
+            if (!studentId) {
+                throw new UserInputError("Student id is missing");
+            }
+            const student = await dataSources.studentAPI.getStudentById(studentId);
+            existingStudentId = student ? student._id : null;
+        }
+
+        if (existingStudentId) {
+
+            return await dataSources.studentAPI.toogleFavoriteTeacher(existingStudentId, teacherId);
+        }
+
+        throw new ApolloError("Student not found");
+
+    }
 };

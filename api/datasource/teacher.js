@@ -14,12 +14,12 @@ class TeacherAPI extends DataSource {
     }
 
     async addTeacher(user) {
-        return await this.db.create({ 
-            user_id: user._id, 
+        return await this.db.create({
+            user_id: user._id,
             bio: null,
-            price: null, 
-            area: [], 
-            day: [] 
+            price: null,
+            area: [],
+            day: []
         });
     }
 
@@ -34,22 +34,30 @@ class TeacherAPI extends DataSource {
     async updateTeacher(id, input) {
         const { bio, price, area, day } = input;
 
-        if (bio){
+        if (bio) {
             await this.db.findByIdAndUpdate(id, { bio });
         }
 
-        if (price){
+        if (price) {
             await this.db.findByIdAndUpdate(id, { price });
         }
 
-        if (area){
-            await this.db.findByIdAndUpdate(id, {'$addToSet': { area }});
+        if (area) {
+            let set = new Set();
+            area.forEach(elem => {
+                set.add(elem);
+            });
+            await this.db.findByIdAndUpdate(id, { area: Array.from(set) });
         }
 
-        if (day){
-            await this.db.findByIdAndUpdate(id, {'$addToSet': { day }});
-        }
+        if (day) {
 
+            let set = new Set();
+            day.forEach(elem => {
+                set.add(elem);
+            });
+            await this.db.findByIdAndUpdate(id, { day: Array.from(set) });
+        }
 
         return this.getTeacherById(id);
     }

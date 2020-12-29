@@ -29,6 +29,24 @@ class StudentAPI extends DataSource {
         return await this.db.findOne({ user_id: user._id });
     }
 
+    async toogleFavoriteTeacher(id, teacherId){
+        let student = await this.getStudentById(id);
+        let favorite_teacher_ids = student.favorite_teacher_ids;
+        const index = favorite_teacher_ids.indexOf(teacherId);
+
+        if(index < 0){
+            favorite_teacher_ids.push(teacherId);
+        }
+        else {
+            favorite_teacher_ids.splice(index, 1);
+        }
+
+        await this.db.findByIdAndUpdate(id, { favorite_teacher_ids });
+        student = await this.getStudentById(id);
+
+        return student;
+    }
+
 }
 
 module.exports = StudentAPI;

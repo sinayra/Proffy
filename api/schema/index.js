@@ -26,10 +26,9 @@ module.exports = gql`
     logout: AuthPayload
     login(account: LoginInput!): AuthPayload
     updateUser(userInput: UserInput!): User @requiresAuthenticate
-    updateTeacher(teacherInput: TeacherInput!): Teacher
-    #addFavoriteTeacher(teacherId: ID!)
-    #removeFavoriteTeacher(teacherId: ID!)
-    #addTeacherStudentConnection(teacherId: ID!)
+    updateTeacher(teacherInput: TeacherInput!): Teacher @requiresRole(role: "TEACHER")
+    toogleFavoriteTeacher(teacherId: ID!, studentId: ID): Student @requiresRole(role: "STUDENT")
+    #addTeacherStudentConnection(teacherId: ID!) @requiresRole(role: "STUDENT")
   }
 
   """

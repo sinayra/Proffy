@@ -44,7 +44,6 @@ class UserAPI extends DataSource {
 
     async updateUser(id, input) {
         const { name, password, whatsapp, avatar } = input;
-        let result = {};
 
         if(name){
             await this.db.findByIdAndUpdate(id, { name });
@@ -52,15 +51,15 @@ class UserAPI extends DataSource {
 
         if(password){
             const hash = authUtils.hashPassword(password);
-            result.password = await this.db.findByIdAndUpdate(id, { hash });
+            await this.db.findByIdAndUpdate(id, { hash });
         }
 
         if(whatsapp){
-            result.password = await this.db.findByIdAndUpdate(id, { whatsapp });
+            await this.db.findByIdAndUpdate(id, { whatsapp });
         }
 
         if(avatar){
-            result.password = await this.db.findByIdAndUpdate(id, { avatar });
+            await this.db.findByIdAndUpdate(id, { avatar });
         }
 
         return this.getUserById(id);
