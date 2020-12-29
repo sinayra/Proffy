@@ -124,22 +124,49 @@ module.exports = {
 
     toogleFavoriteTeacher: async (parent, { teacherId, studentId }, { dataSources, user }, info) => {
         let existingStudentId = null;
+        let student;
 
         if (user.role === 'STUDENT') {
-            const student = await dataSources.studentAPI.getStudentById(user._id);
-            existingStudentId = student ? student._id : null;
+            student = await dataSources.studentAPI.getStudentById(user._id);
+            
         }
         else {
             if (!studentId) {
                 throw new UserInputError("Student id is missing");
             }
-            const student = await dataSources.studentAPI.getStudentById(studentId);
-            existingStudentId = student ? student._id : null;
+            student = await dataSources.studentAPI.getStudentById(studentId);
         }
+
+        existingStudentId = student ? student._id : null;
 
         if (existingStudentId) {
 
             return await dataSources.studentAPI.toogleFavoriteTeacher(existingStudentId, teacherId);
+        }
+
+        throw new ApolloError("Student not found");
+
+    },
+
+    addTeacherStudentConnection: async (parent, { teacherId, studentId }, { dataSources, user }, info) => {
+        let existingStudentId = null;
+        let student;
+
+        if (user.role === 'STUDENT') {
+            student = await dataSources.studentAPI.getStudentById(user._id);
+            
+        }
+        else {
+            if (!studentId) {
+                throw new UserInputError("Student id is missing");
+            }
+            student = await dataSources.studentAPI.getStudentById(studentId);
+        }
+
+        existingStudentId = student ? student._id : null;
+
+        if (existingStudentId) {
+            return await dataSources.studentAPI.addTeacherStudentConnection(existingStudentId, teacherId);
         }
 
         throw new ApolloError("Student not found");

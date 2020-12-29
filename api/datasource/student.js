@@ -14,7 +14,7 @@ class StudentAPI extends DataSource {
     }
 
     async addStudent(user) {
-        return await this.db.create({ 
+        return await this.db.create({
             user_id: user._id,
             favorite_teacher_ids: [],
             connected_teacher_ids: [],
@@ -29,12 +29,12 @@ class StudentAPI extends DataSource {
         return await this.db.findOne({ user_id: user._id });
     }
 
-    async toogleFavoriteTeacher(id, teacherId){
+    async toogleFavoriteTeacher(id, teacherId) {
         let student = await this.getStudentById(id);
         let favorite_teacher_ids = student.favorite_teacher_ids;
         const index = favorite_teacher_ids.indexOf(teacherId);
 
-        if(index < 0){
+        if (index < 0) {
             favorite_teacher_ids.push(teacherId);
         }
         else {
@@ -43,6 +43,19 @@ class StudentAPI extends DataSource {
 
         await this.db.findByIdAndUpdate(id, { favorite_teacher_ids });
         student = await this.getStudentById(id);
+
+        return student;
+    }
+
+    async addTeacherStudentConnection(id, teacherId) {
+        let student = await this.getStudentById(id);
+        let connected_teacher_ids = student.connected_teacher_ids;
+
+        if (!connected_teacher_ids.includes(teacherId)) {
+            connected_teacher_ids.push(teacherId);
+            await this.db.findByIdAndUpdate(id, { connected_teacher_ids });
+            student = await this.getStudentById(id);
+        }
 
         return student;
     }
