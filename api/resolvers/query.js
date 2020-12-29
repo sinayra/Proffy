@@ -3,8 +3,8 @@ module.exports = {
         return await dataSources.userAPI.getUsers();
     },
 
-    teachers: async (parent, args, { dataSources }, info) => {
-        return await dataSources.teacherAPI.getTeachers();
+    teachers: async (parent, { teacher }, { dataSources }, info) => {
+        return await dataSources.teacherAPI.getTeachers(teacher);
     },
 
     students: async (parent, args, { dataSources }, info) => {

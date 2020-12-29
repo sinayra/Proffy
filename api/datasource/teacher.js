@@ -9,8 +9,25 @@ class TeacherAPI extends DataSource {
 
     initialize(config) { }
 
-    async getTeachers() {
-        return await this.db.find();
+    async getTeachers(teacher) {
+        let filter = {};
+        if (teacher) {
+            const { day, area, price } = teacher;
+
+            if (day) {
+                filter.day = { '$in': day };
+            }
+
+            if (area) {
+                filter.area = { '$in': area };
+            }
+
+            if (price) {
+                filter.price = price;
+            }
+        }
+        console.log(filter);
+        return await this.db.find(filter);
     }
 
     async addTeacher(user) {
