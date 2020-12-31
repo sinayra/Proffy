@@ -14,23 +14,16 @@ class UserAPI extends DataSource {
     }
 
     async addUser(user) {
-        let { name, email, password, whatsapp, avatar, role } = user;
 
-        const hash = authUtils.hashPassword(password);
+        user.hash = authUtils.hashPassword(user.password);
+        delete user.password;
 
-        if (!avatar) {
-            avatar = '/default-avatar.png';
+        if (!user.avatar) {
+            user.avatar = '/default-avatar.png';
         }
-        email = email.toLowerCase();
+        user.email = email.toLowerCase();
 
-        return await this.db.create({
-            name,
-            email,
-            hash,
-            whatsapp,
-            avatar,
-            role
-        });
+        return await this.db.create(user);
     }
 
     async getUserById(id) {
