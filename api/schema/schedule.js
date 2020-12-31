@@ -3,8 +3,8 @@ module.exports = `
 input ScheduleInput {
     _id: ID
     weekday: Weekday!
-    from: Time!
-    to: Time!
+    from: Time
+    to: Time
 }
 
 type Schedule {
