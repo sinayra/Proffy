@@ -8,5 +8,18 @@ const Directive = require('./directive');
 const Enum = require('./enum');
 const Scalar = require('./scalar');
 const Union = require('./union');
+const Schedule = require('./schedule');
 
-module.exports = [User, Teacher, Student, Query, Mutation, Authentication, Directive, Enum, Scalar, Union];
+module.exports = [
+    User, 
+    Teacher,
+    Schedule,
+    Student, 
+    Authentication, 
+    Directive, 
+    Query, 
+    Mutation, 
+    Enum, 
+    Scalar, 
+    Union, 
+];

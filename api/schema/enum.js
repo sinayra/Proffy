@@ -19,14 +19,4 @@ enum Area {
     PHYSICAL_EDUCATION
     ECONOMIC_SCIENCES
 }
-
-enum Weekday {
-    SUNDAY
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
-}
 `;

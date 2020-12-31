@@ -95,28 +95,37 @@ module.exports = {
     },
 
     updateTeacher: async (parent, { teacherInput }, { dataSources, user }, info) => {
-        let existingTeacherId = null;
+        let teacherBefore = null;
 
         if (user.role === "TEACHER") {
-            const teacher = await dataSources.teacherAPI.getTeacherByUser(user);
-            existingTeacherId = teacher ? teacher._id : null;
+            teacherBefore = await dataSources.teacherAPI.getTeacherByUser(user);
         }
         else {
             if (!teacherInput._id) {
                 throw new UserInputError("Teacher id is missing");
             }
-            const teacher = await dataSources.teacherAPI.getTeacherById(teacherInput._id);
-            if (!teacher) {
-                existingTeacherId = null;
-            }
-            else {
-                existingTeacherId = teacherInput._id;
-                delete teacherInput._id;
-            }
+            teacherBefore = await dataSources.teacherAPI.getTeacherById(teacherInput._id);
         }
 
-        if (existingTeacherId) {
-            return await dataSources.teacherAPI.updateTeacher(existingTeacherId, teacherInput);
+        if (teacherBefore) {
+            let { schedules, ...data } = teacherInput;
+            data.schedule_ids = [];
+
+            for (let i = 0; i < schedules.length; i++) {
+                if (schedules[i]._id) {
+                    await dataSources.scheduleAPI.updateSchedule(schedules[i]._id, schedules[i]);
+                }
+                else {
+                    schedules[i] = await dataSources.scheduleAPI.addSchedule(teacherBefore._id, schedules[i]);
+                }
+                data.schedule_ids.push(schedules[i]._id);
+            }
+
+            const removeSchedules = teacherBefore.schedule_ids.filter((elem) => !data.schedule_ids.includes(elem));
+            
+            removeSchedules.forEach(async (id) => await dataSources.scheduleAPI.deleteSchedule(id));
+
+            return await dataSources.teacherAPI.updateTeacher(teacherBefore._id, data);
         }
 
         throw new ApolloError("Teacher not found");
@@ -128,7 +137,7 @@ module.exports = {
 
         if (user.role === 'STUDENT') {
             student = await dataSources.studentAPI.getStudentById(user._id);
-            
+
         }
         else {
             if (!studentId) {
@@ -154,7 +163,7 @@ module.exports = {
 
         if (user.role === 'STUDENT') {
             student = await dataSources.studentAPI.getStudentById(user._id);
-            
+
         }
         else {
             if (!studentId) {

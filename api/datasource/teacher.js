@@ -26,17 +26,12 @@ class TeacherAPI extends DataSource {
                 filter.price = price;
             }
         }
-        console.log(filter);
         return await this.db.find(filter);
     }
 
     async addTeacher(user) {
         return await this.db.create({
-            user_id: user._id,
-            bio: null,
-            price: null,
-            area: [],
-            day: []
+            user_id: user._id
         });
     }
 
@@ -49,34 +44,22 @@ class TeacherAPI extends DataSource {
     }
 
     async updateTeacher(id, input) {
-        const { bio, price, area, day } = input;
+        const { _id, ...data } = input;
 
-        if (bio) {
-            await this.db.findByIdAndUpdate(id, { bio });
-        }
-
-        if (price) {
-            await this.db.findByIdAndUpdate(id, { price });
-        }
-
-        if (area) {
+        if (data.area) {
             let set = new Set();
-            area.forEach(elem => {
+            data.area.forEach(elem => {
                 set.add(elem);
             });
-            await this.db.findByIdAndUpdate(id, { area: Array.from(set) });
+
+            data.area = Array.from(set);
         }
 
-        if (day) {
-
-            let set = new Set();
-            day.forEach(elem => {
-                set.add(elem);
-            });
-            await this.db.findByIdAndUpdate(id, { day: Array.from(set) });
-        }
-
-        return this.getTeacherById(id);
+        return await this.db.findByIdAndUpdate(
+            id,
+            { $set: data },
+            { new: true }
+        );
     }
 
 }

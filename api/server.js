@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const UserAPI = require('./datasource/user');
 const StudentAPI = require('./datasource/student');
 const TeacherAPI = require('./datasource/teacher');
+const ScheduleAPI = require('./datasource/schedule');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const auth = require('./util/auth');
@@ -18,13 +19,15 @@ const { RequiresAuthenticateDirective } = require('./directives/authenticate');
 const UserDBModel = require('./model/user');
 const TeacherDBModel = require('./model/teacher');
 const StudentDBModel = require('./model/student');
+const ScheduleDBModel = require('./model/schedule');
 
 const app = express();
 
 const dataSources = () => ({
     userAPI: new UserAPI(UserDBModel),
     studentAPI: new StudentAPI(StudentDBModel),
-    teacherAPI: new TeacherAPI(TeacherDBModel)
+    teacherAPI: new TeacherAPI(TeacherDBModel),
+    scheduleAPI: new ScheduleAPI(ScheduleDBModel),
 });
 
 app.use(cookieParser());

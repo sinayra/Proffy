@@ -9,4 +9,4 @@ const studentSchema = new mongoose.Schema({
     connected_teacher_ids: [String]
 });
 
-module.exports = mongoose.model('student', studentSchema);
+module.exports = mongoose.model('students', studentSchema);

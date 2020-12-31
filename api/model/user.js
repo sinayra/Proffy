@@ -34,4 +34,4 @@ const userSchema = new mongoose.Schema({
     active: { type: Boolean, default: true }
 });
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('users', userSchema);

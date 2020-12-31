@@ -6,8 +6,8 @@ input TeacherInput {
     _id: ID
     bio: String
     price: String
-    area: [Area!]
-    day: [Weekday!]
+    area: [Area]!
+    schedules: [ScheduleInput]!
 }
 
 type Teacher {
@@ -16,8 +16,8 @@ type Teacher {
     user: User!
     bio: String
     price: String
-    area: [Area]
-    day: [Weekday]
+    area: [Area]!
+    schedules: [Schedule]!
     subject: String @deprecated(
         reason: "A teacher can have more than one subject that he can teach, so this field will be remove soon. Use 'area' instead."
         )

@@ -8,8 +8,8 @@ const teacherSchema = new mongoose.Schema({
     bio: String,
     price: String,
     area: [String],
-    day: [String],
+    schedule_ids: [String],
     subject: String
 });
 
-module.exports = mongoose.model('teacher', teacherSchema);
+module.exports = mongoose.model('teachers', teacherSchema);

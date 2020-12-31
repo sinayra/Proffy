@@ -1,6 +1,5 @@
 const { DataSource } = require('apollo-datasource');
 const authUtils = require('../util/auth');
-const _ = require('lodash');
 
 class UserAPI extends DataSource {
     constructor(db) {
@@ -43,26 +42,18 @@ class UserAPI extends DataSource {
     }
 
     async updateUser(id, input) {
-        const { name, password, whatsapp, avatar } = input;
+        const { _id, ...data } = input;
 
-        if(name){
-            await this.db.findByIdAndUpdate(id, { name });
+        if(data.password){
+            data.hash = authUtils.hashPassword(data.password);
+            delete data.password;
         }
 
-        if(password){
-            const hash = authUtils.hashPassword(password);
-            await this.db.findByIdAndUpdate(id, { hash });
-        }
-
-        if(whatsapp){
-            await this.db.findByIdAndUpdate(id, { whatsapp });
-        }
-
-        if(avatar){
-            await this.db.findByIdAndUpdate(id, { avatar });
-        }
-
-        return this.getUserById(id);
+        return await this.db.findByIdAndUpdate(
+            id,
+            { $set: data },
+            { new: true }
+        );
     }
 
 }

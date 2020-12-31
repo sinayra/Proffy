@@ -1,5 +1,4 @@
 const { DataSource } = require('apollo-datasource');
-const _ = require('lodash');
 
 class StudentAPI extends DataSource {
     constructor(db) {
@@ -16,8 +15,6 @@ class StudentAPI extends DataSource {
     async addStudent(user) {
         return await this.db.create({
             user_id: user._id,
-            favorite_teacher_ids: [],
-            connected_teacher_ids: [],
         });
     }
 
@@ -42,9 +39,8 @@ class StudentAPI extends DataSource {
         }
 
         await this.db.findByIdAndUpdate(id, { favorite_teacher_ids });
-        student = await this.getStudentById(id);
 
-        return student;
+        return await this.getStudentById(id);
     }
 
     async addTeacherStudentConnection(id, teacherId) {
