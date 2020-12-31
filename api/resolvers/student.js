@@ -4,24 +4,14 @@ module.exports = {
     },
 
     async favorites(student, args, { dataSources }) {
-        const favorites = [];
-
-        for(let i = 0; i < student.favorite_teacher_ids.length; i++){
-            const id = student.favorite_teacher_ids[i];
-            favorites.push(await dataSources.teacherAPI.getTeacherById(id));
-        }
-
-        return favorites;
+        return student.favorite_teacher_ids.map(
+            async (id) => await dataSources.teacherAPI.getTeacherById(id)
+        );
     },
 
     async connected(student, args, { dataSources }) {
-        const connected = [];
-
-        for(let i = 0; i < student.connected_teacher_ids.length; i++){
-            const id = student.connected_teacher_ids[i];
-            connected.push(await dataSources.teacherAPI.getTeacherById(id));
-        }
-
-        return connected;
+        return student.connected_teacher_ids.map(
+            async (id) => await dataSources.teacherAPI.getTeacherById(id)
+        );
     }
 }
