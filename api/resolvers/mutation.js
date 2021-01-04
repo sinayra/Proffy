@@ -5,17 +5,32 @@ module.exports = {
     signup: async (parent, { account }, { dataSources, res, user }, info) => {
 
         if (user) {
-            throw new ApolloError("You must logout before create a new account");
+            return {
+                code: 400,
+                success: false,
+                message: "Client must not have token before signup",
+                error: new ApolloError("You must logout before creating a new account")
+            }
         }
 
         const existingUser = await dataSources.userAPI.getUserByEmail(account.email.toLowerCase());
 
         if (existingUser) {
-            throw new AuthenticationError("A user account with this email already exists");
+            return {
+                code: 400,
+                success: false,
+                message: "User already exists with this email",
+                error: new ApolloError("A user account with this email already exists")
+            }
         }
 
         if (account.role === 'ADMIN') {
-            throw new ForbiddenError("Cannot creates an admin account via client.");
+            return {
+                code: 403,
+                success: false,
+                message: "Cannot creates an admin account via client.",
+                error: new ForbiddenError("Cannot creates an admin account via client.")
+            }
         }
 
         const newUser = await dataSources.userAPI.addUser(account);
@@ -35,6 +50,9 @@ module.exports = {
         });
 
         return {
+            code: 201,
+            success: true,
+            message: "New user has been created",
             user: newUser
         }
     },
@@ -42,6 +60,9 @@ module.exports = {
     logout: async (parent, args, { dataSources, res }, info) => {
         res.clearCookie("token");
         return {
+            code: 204,
+            success: true,
+            message: "User has been logged out",
             user: undefined,
         };
     },
@@ -50,7 +71,12 @@ module.exports = {
         const existingUser = await dataSources.userAPI.getUserByEmail(account.email.toLowerCase());
 
         if (!existingUser) {
-            throw new AuthenticationError("Incorrect email address or password.");
+            return {
+                code: 404,
+                success: false,
+                message: "Cannot find a user with this email and password",
+                error: new AuthenticationError("Incorrect email address or password.")
+            }
         }
 
         const isValidPassword = auth.verifyPassword(
@@ -59,7 +85,12 @@ module.exports = {
         );
 
         if (!isValidPassword) {
-            throw new AuthenticationError("Incorrect email address or password.");
+            return {
+                code: 404,
+                success: false,
+                message: "Cannot find a user with this email and password",
+                error: new AuthenticationError("Incorrect email address or password.")
+            }
         }
 
         const token = auth.createToken(existingUser);
@@ -70,6 +101,9 @@ module.exports = {
         });
 
         return {
+            code: 200,
+            success: true,
+            message: "User has been logged in",
             user: existingUser
         }
     },
@@ -86,12 +120,21 @@ module.exports = {
         let existingUser = await dataSources.userAPI.getUserById(userId);
 
         if (existingUser) {
-            existingUser = await dataSources.userAPI.updateUser(userId, userInput);
 
-            return existingUser;
+            return {
+                code: 200,
+                success: true,
+                message: "User has been updated",
+                user: await dataSources.userAPI.updateUser(userId, userInput)
+            }
         }
 
-        throw new ApolloError("User not found");
+        return {
+            code: 404,
+            success: false,
+            message: "User not found",
+            error: new ApolloError("User not found")
+        }
     },
 
     updateTeacher: async (parent, { teacherInput }, { dataSources, user }, info) => {
@@ -102,7 +145,12 @@ module.exports = {
         }
         else {
             if (!teacherInput._id) {
-                throw new UserInputError("Teacher id is missing");
+                return {
+                    code: 412,
+                    success: false,
+                    message: "Missing required field: teacherInput._id",
+                    user: new UserInputError("Teacher id is missing")
+                }
             }
             teacherBefore = await dataSources.teacherAPI.getTeacherById(teacherInput._id);
         }
@@ -129,10 +177,21 @@ module.exports = {
             const removeSchedules = teacherBefore.schedule_ids.filter((elem) => !data.schedule_ids.includes(elem));
             removeSchedules.forEach(async (id) => await dataSources.scheduleAPI.deleteSchedule(id));
 
-            return await dataSources.teacherAPI.updateTeacher(teacherBefore._id, data);
+            return {
+                code: 200,
+                success: true,
+                message: "Teacher has been updated",
+                teacher: await dataSources.teacherAPI.updateTeacher(teacherBefore._id, data)
+            }
         }
 
-        throw new ApolloError("Teacher not found");
+        return {
+            code: 404,
+            success: false,
+            message: "Teacher not found",
+            error: new ApolloError("Teacher not found")
+        }
+
     },
 
     toogleFavoriteTeacher: async (parent, { teacherId, studentId }, { dataSources, user }, info) => {
@@ -145,7 +204,13 @@ module.exports = {
         }
         else {
             if (!studentId) {
-                throw new UserInputError("Student id is missing");
+                return {
+                    code: 412,
+                    success: false,
+                    message: "Missing required field: studentId",
+                    error: new UserInputError("Student id is missing")
+                }
+
             }
             student = await dataSources.studentAPI.getStudentById(studentId);
         }
@@ -153,11 +218,21 @@ module.exports = {
         existingStudentId = student ? student._id : null;
 
         if (existingStudentId) {
+            return {
+                code: 200,
+                success: true,
+                message: "Student has been updated",
+                student: await dataSources.studentAPI.toogleFavoriteTeacher(existingStudentId, teacherId)
+            }
 
-            return await dataSources.studentAPI.toogleFavoriteTeacher(existingStudentId, teacherId);
         }
 
-        throw new ApolloError("Student not found");
+        return {
+            code: 404,
+            success: false,
+            message: "Student not found",
+            error: new ApolloError("Student not found")
+        }
 
     },
 
@@ -171,7 +246,12 @@ module.exports = {
         }
         else {
             if (!studentId) {
-                throw new UserInputError("Student id is missing");
+                return {
+                    code: 412,
+                    success: false,
+                    message: "Missing required field: studentId",
+                    error: new UserInputError("Student id is missing")
+                }
             }
             student = await dataSources.studentAPI.getStudentById(studentId);
         }
@@ -179,10 +259,20 @@ module.exports = {
         existingStudentId = student ? student._id : null;
 
         if (existingStudentId) {
-            return await dataSources.studentAPI.addTeacherStudentConnection(existingStudentId, teacherId);
+            return {
+                code: 200,
+                success: true,
+                message: "Student has been updated",
+                student: await dataSources.studentAPI.addTeacherStudentConnection(existingStudentId, teacherId)
+            }
         }
 
-        throw new ApolloError("Student not found");
+        return {
+            code: 404,
+            success: false,
+            message: "Student not found",
+            error: new ApolloError("Student not found")
+        }
 
     }
 };

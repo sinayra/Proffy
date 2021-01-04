@@ -1,4 +1,23 @@
 module.exports = `
+
+"Response with many User data"
+type UserListResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  users: [User]
+  error: String
+}
+
+"Response with a User data"
+type UserResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  user: User
+  error: String
+}
+
 """
     An input to update fields from User
 """

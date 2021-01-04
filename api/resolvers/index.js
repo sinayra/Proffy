@@ -25,4 +25,9 @@ module.exports = {
             return null;
         }
     },
+    MutationResponse: { //I dont like this fix
+        __resolveType() {
+          return null;
+        }
+      }
 };

@@ -1,4 +1,24 @@
 module.exports = `
+
+"Response with many Teacher data"
+type TeacherListResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  teachers: [Teacher]
+  error: String
+}
+
+"Response with a Teacher data"
+
+type TeacherResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  teacher: Teacher
+  error: String
+}
+
 """
     An input with all optional fields from Teacher
 """

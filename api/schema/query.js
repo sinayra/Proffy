@@ -1,14 +1,14 @@
 module.exports = `
 type Query {
     "list of users"
-    users: [User]
+    users: UserListResponse
     "list of teachers"
-    teachers(teacher: TeacherInput): [Teacher]
+    teachers(teacher: TeacherInput): TeacherListResponse
     "list of students"
-    students: [Student]
-    "get teacher from the current user after them have logged in. requires a teacher role account"
-    teacherByCurrentUser: Teacher @requiresRole(role: "TEACHER")
-    "get student from the current user after them have logged in.  requires a student role account"
-    studentByCurrentUser: Student @requiresRole(role: "STUDENT")
+    students: StudentListResponse
+    "get teacher from the current user after them have logged in. Requires a teacher role account"
+    teacherByCurrentUser: TeacherResponse @requiresRole(role: "TEACHER")
+    "get student from the current user after them have logged in. Requires a student role account"
+    studentByCurrentUser: StudentResponse @requiresRole(role: "STUDENT")
 }
 `;

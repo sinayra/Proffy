@@ -20,7 +20,11 @@ input LoginInput {
 }
 
 "Response after login, logout and signin"
-type AuthPayload {
+type AuthResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
   user: User
+  error: String
 }
 `;
