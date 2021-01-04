@@ -23,7 +23,7 @@ class ScheduleAPI extends DataSource {
                 '$in': Array.from(set)
             };
         }
-
+        //get only the first interval
         if (schedules[0].from && schedules[0].to) {
             filter.from = {
                 '$lt': schedules[0].to,
