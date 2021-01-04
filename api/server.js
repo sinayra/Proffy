@@ -5,6 +5,7 @@ const { ApolloServer } = require('apollo-server-express');
 const http = require('http');
 const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
+const depthLimit = require('graphql-depth-limit');
 
 const UserAPI = require('./datasource/user');
 const StudentAPI = require('./datasource/student');
@@ -43,6 +44,9 @@ const server = new ApolloServer({
     dataSources,
     typeDefs,
     resolvers,
+    validationRules: [
+        depthLimit(3),
+    ],
     context: async ({ req, res }) => {
         let user = null;
 
