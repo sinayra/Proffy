@@ -110,16 +110,22 @@ module.exports = {
         if (teacherBefore) {
             let { schedules, ...data } = teacherInput;
 
-            data.schedule_ids = schedules.map(async (schedule) => {
-                if (schedule._id) {
-                    await dataSources.scheduleAPI.updateSchedule(schedules[i]._id, schedules[i]);
-                }
-                else {
-                    schedule = await dataSources.scheduleAPI.addSchedule(teacherBefore._id, schedules[i]);
-                }
+            const waitForSchedules = async () => {
+                return Promise.all(schedules.map(async (schedule) => {
+                    let newSchedule;
+                    if (schedule._id) {
+                        newSchedule = await dataSources.scheduleAPI.updateSchedule(schedule._id, schedule);
+                    }
+                    else {
+                        newSchedule = await dataSources.scheduleAPI.addSchedule(teacherBefore._id, schedule);
+                    }
 
-                return schedule._id;
-            });
+                    return newSchedule._id;
+                }));
+            }
+
+            data.schedule_ids = await waitForSchedules();
+
             const removeSchedules = teacherBefore.schedule_ids.filter((elem) => !data.schedule_ids.includes(elem));
             removeSchedules.forEach(async (id) => await dataSources.scheduleAPI.deleteSchedule(id));
 

@@ -21,7 +21,7 @@ class UserAPI extends DataSource {
         if (!user.avatar) {
             user.avatar = '/default-avatar.png';
         }
-        user.email = email.toLowerCase();
+        user.email = user.email.toLowerCase();
 
         return await this.db.create(user);
     }

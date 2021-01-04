@@ -12,18 +12,13 @@ class TeacherAPI extends DataSource {
     async getTeachers(teacher) {
         let filter = {};
         if (teacher) {
-            const { day, area, price } = teacher;
 
-            if (day) {
-                filter.day = { '$in': day };
+            if (teacher.area) {
+                filter.area = { '$in': teacher.area };
             }
 
-            if (area) {
-                filter.area = { '$in': area };
-            }
-
-            if (price) {
-                filter.price = price;
+            if (teacher.price) {
+                filter.price = teacher.price;
             }
         }
         return await this.db.find(filter);
@@ -37,6 +32,22 @@ class TeacherAPI extends DataSource {
 
     async getTeacherById(id) {
         return await this.db.findById(id);
+    }
+
+    async findTeacher(teacher) {
+        let filter = {};
+
+        filter._id = teacher._id;
+
+        if (teacher.area) {
+            filter.area = { '$in': teacher.area };
+        }
+
+        if (teacher.price) {
+            filter.price = teacher.price;
+        }
+
+        return await this.db.findOne(filter);
     }
 
     async getTeacherByUser(user) {

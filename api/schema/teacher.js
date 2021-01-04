@@ -6,8 +6,8 @@ input TeacherInput {
     _id: ID
     bio: String
     price: String
-    area: [Area]!
-    schedules: [ScheduleInput]!
+    area: [Area]
+    schedules: [ScheduleInput]
 }
 
 type Teacher {
