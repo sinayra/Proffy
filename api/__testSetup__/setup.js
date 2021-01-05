@@ -102,5 +102,6 @@ module.exports = {
     apis,
     connectToDb,
     closeDbConnection,
-    dropTestDb
+    dropTestDb,
+    context
 }
