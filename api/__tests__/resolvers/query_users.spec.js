@@ -1,4 +1,4 @@
-const { expect, should } = require('chai');
+const { expect } = require('chai');
 const { gql } = require('apollo-server-express');
 const { testClient, connectToDb, dropTestDb, closeDbConnection, apis } = require('../../__testSetup__/setup');
 
@@ -55,19 +55,11 @@ describe('users : UserListResponse', () => {
             query: GET_USERS
         });
         expect(data).to.have.property('users');
-        expect(data.users).to.have.property('code');
-        expect(data.users).to.have.property('success');
-        expect(data.users).to.have.property('users');
+        expect(data.users).to.have.property('code', '200');
+        expect(data.users).to.have.property('success', true);
+        expect(data.users).to.have.property('users').to.have.lengthOf(2);
 
-        const {
-            code, success, users
-        } = data.users;
-
-        expect(code).to.equal('200');
-        expect(success).to.be.true;
-        expect(users).to.have.lengthOf(2);
-
-        const [elem1, elem2] = users;
+        const [elem1, elem2] = data.users.users;
 
         expect(elem1).to.have.property('email', obj1.email);
         expect(elem1).to.not.have.property('name');
@@ -96,17 +88,11 @@ describe('users : UserListResponse', () => {
         });
 
         expect(data).to.have.property('users');
-        expect(data.users).to.have.property('code');
-        expect(data.users).to.have.property('success');
-        expect(data.users).to.have.property('users');
+        expect(data.users).to.have.property('code', '503');
+        expect(data.users).to.have.property('success', false);
+        expect(data.users).to.have.property('users').to.be.null;
 
-        const {
-            code, success, users
-        } = data.users;
-
-        expect(code).to.equal('503');
-        expect(success).to.be.false;
-        expect(users).to.be.null
+        await connectToDb();
        
     }).timeout(15000);
 });

@@ -34,7 +34,8 @@ const connectToDb = async () => {
     await mongoose.connect(`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@localhost:27017/${process.env.MONGODB_TEST_DATABASE}`,
         {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useCreateIndex: true
         })
         .catch(error => console.error(error));
 }

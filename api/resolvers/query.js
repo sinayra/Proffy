@@ -10,8 +10,7 @@ module.exports = {
             }
         }
         catch (err) {
-            console.error(err);
-
+            //console.error(err);
             return {
                 code: 503,
                 success: false,
@@ -54,11 +53,20 @@ module.exports = {
     },
 
     students: async (parent, args, { dataSources }, info) => {
-        return {
-            code: 200,
-            success: true,
-            message: "Students had been retrieved",
-            student: await dataSources.studentAPI.getStudents()
+        try {
+            return {
+                code: 200,
+                success: true,
+                message: "Students had been retrieved",
+                students: await dataSources.studentAPI.getStudents()
+            }
+        } catch (err) {
+            //console.error(err);
+            return {
+                code: 503,
+                success: false,
+                message: "Error while retriving data. Try again later.",
+            }
         }
     },
 
