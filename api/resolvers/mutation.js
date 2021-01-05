@@ -11,45 +11,55 @@ module.exports = {
             }
         }
 
-        const existingUser = await dataSources.userAPI.getUserByEmail(account.email.toLowerCase());
+        try {
+            const existingUser = await dataSources.userAPI.getUserByEmail(account.email.toLowerCase());
 
-        if (existingUser) {
+            if (existingUser) {
+                return {
+                    code: 400,
+                    success: false,
+                    message: "A user account with this email already exists",
+                }
+            }
+
+            if (account.role === 'ADMIN') {
+                return {
+                    code: 403,
+                    success: false,
+                    message: "Cannot creates an admin account via client.",
+                }
+            }
+
+            const newUser = await dataSources.userAPI.addUser(account);
+
+            if (account.role === 'STUDENT') {
+                await dataSources.studentAPI.addStudent(newUser);
+            }
+            else if (account.role === 'TEACHER') {
+                await dataSources.teacherAPI.addTeacher(newUser)
+            }
+
+            const token = auth.createToken(newUser);
+            res.cookie('token', token, {
+                httpOnly: true,
+                sameSite: true,
+                secure: true
+            });
+
             return {
-                code: 400,
-                success: false,
-                message: "A user account with this email already exists",
+                code: 201,
+                success: true,
+                message: "New user has been created",
+                user: newUser
             }
         }
-
-        if (account.role === 'ADMIN') {
+        catch (err) {
+            //console.error(err);
             return {
-                code: 403,
+                code: 503,
                 success: false,
-                message: "Cannot creates an admin account via client.",
+                message: "Error while retriving data. Try again later.",
             }
-        }
-
-        const newUser = await dataSources.userAPI.addUser(account);
-
-        if (account.role === 'STUDENT') {
-            await dataSources.studentAPI.addStudent(newUser);
-        }
-        else if (account.role === 'TEACHER') {
-            await dataSources.teacherAPI.addTeacher(newUser)
-        }
-
-        const token = auth.createToken(newUser);
-        res.cookie('token', token, {
-            httpOnly: true,
-            sameSite: true,
-            secure: true
-        });
-
-        return {
-            code: 201,
-            success: true,
-            message: "New user has been created",
-            user: newUser
         }
     },
 
