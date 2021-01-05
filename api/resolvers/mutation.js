@@ -63,13 +63,20 @@ module.exports = {
         }
     },
 
-    logout: async (parent, args, { dataSources, res }, info) => {
-        res.clearCookie("token");
+    logout: async (parent, args, { dataSources, res, user }, info) => {
+        if (user) {
+            res.clearCookie("token");
+            return {
+                code: 204,
+                success: true,
+                message: "User has been logged out",
+                user: undefined,
+            };
+        }
         return {
-            code: 204,
-            success: true,
-            message: "User has been logged out",
-            user: undefined,
+            code: 400,
+            success: false,
+            message: "Cannot loggout if there is no user",
         };
     },
 
