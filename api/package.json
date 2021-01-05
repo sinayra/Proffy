@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha __tests__/**/*.spec.js",
     "database": "D:\\MongoDB\\Server\\4.2\\bin\\mongod.exe --dbpath \"D:\\MongoDB\\data\"",
     "start": "nodemon server.js"
   },
@@ -23,6 +23,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "apollo-server-testing": "^2.19.1",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
     "nodemon": "^2.0.6"
   }
 }
