@@ -6,7 +6,6 @@ type TeacherListResponse implements MutationResponse {
   success: Boolean!
   message: String!
   teachers: [Teacher]
-  error: String
 }
 
 "Response with a Teacher data"
@@ -16,7 +15,6 @@ type TeacherResponse implements MutationResponse {
   success: Boolean!
   message: String!
   teacher: Teacher
-  error: String
 }
 
 """

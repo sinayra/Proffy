@@ -1,4 +1,3 @@
-const { AuthenticationError, ForbiddenError, UserInputError, ApolloError } = require('apollo-server');
 const auth = require('../util/auth');
 
 module.exports = {
@@ -8,8 +7,7 @@ module.exports = {
             return {
                 code: 400,
                 success: false,
-                message: "Client must not have token before signup",
-                error: new ApolloError("You must logout before creating a new account")
+                message: "You must logout before creating a new account",
             }
         }
 
@@ -19,8 +17,7 @@ module.exports = {
             return {
                 code: 400,
                 success: false,
-                message: "User already exists with this email",
-                error: new ApolloError("A user account with this email already exists")
+                message: "A user account with this email already exists",
             }
         }
 
@@ -29,7 +26,6 @@ module.exports = {
                 code: 403,
                 success: false,
                 message: "Cannot creates an admin account via client.",
-                error: new ForbiddenError("Cannot creates an admin account via client.")
             }
         }
 
@@ -74,8 +70,7 @@ module.exports = {
             return {
                 code: 404,
                 success: false,
-                message: "Cannot find a user with this email and password",
-                error: new AuthenticationError("Incorrect email address or password.")
+                message: "Incorrect email address or password.",
             }
         }
 
@@ -88,8 +83,7 @@ module.exports = {
             return {
                 code: 404,
                 success: false,
-                message: "Cannot find a user with this email and password",
-                error: new AuthenticationError("Incorrect email address or password.")
+                message: "Incorrect email address or password.",
             }
         }
 
@@ -133,7 +127,6 @@ module.exports = {
             code: 404,
             success: false,
             message: "User not found",
-            error: new ApolloError("User not found")
         }
     },
 
@@ -149,7 +142,6 @@ module.exports = {
                     code: 412,
                     success: false,
                     message: "Missing required field: teacherInput._id",
-                    user: new UserInputError("Teacher id is missing")
                 }
             }
             teacherBefore = await dataSources.teacherAPI.getTeacherById(teacherInput._id);
@@ -189,7 +181,6 @@ module.exports = {
             code: 404,
             success: false,
             message: "Teacher not found",
-            error: new ApolloError("Teacher not found")
         }
 
     },
@@ -208,7 +199,6 @@ module.exports = {
                     code: 412,
                     success: false,
                     message: "Missing required field: studentId",
-                    error: new UserInputError("Student id is missing")
                 }
 
             }
@@ -231,7 +221,6 @@ module.exports = {
             code: 404,
             success: false,
             message: "Student not found",
-            error: new ApolloError("Student not found")
         }
 
     },
@@ -250,7 +239,6 @@ module.exports = {
                     code: 412,
                     success: false,
                     message: "Missing required field: studentId",
-                    error: new UserInputError("Student id is missing")
                 }
             }
             student = await dataSources.studentAPI.getStudentById(studentId);
@@ -271,7 +259,6 @@ module.exports = {
             code: 404,
             success: false,
             message: "Student not found",
-            error: new ApolloError("Student not found")
         }
 
     }

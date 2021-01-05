@@ -6,7 +6,6 @@ type UserListResponse implements MutationResponse {
   success: Boolean!
   message: String!
   users: [User]
-  error: String
 }
 
 "Response with a User data"

@@ -1,12 +1,22 @@
-const { ApolloError } = require("apollo-server");
 
 module.exports = {
     users: async (parent, args, { dataSources }, info) => {
-        return {
-            code: 200,
-            success: true,
-            message: "Users had been retrieved",
-            users: await dataSources.userAPI.getUsers()
+        try {
+            return {
+                code: 200,
+                success: true,
+                message: "Users had been retrieved",
+                users: await dataSources.userAPI.getUsers()
+            }
+        }
+        catch (err) {
+            console.error(err);
+
+            return {
+                code: 503,
+                success: false,
+                message: "Error while retriving data. Try again later.",
+            }
         }
     },
 
@@ -40,7 +50,6 @@ module.exports = {
             code: 400,
             success: false,
             message: "Filters could not be applied",
-            error: new ApolloError("Filters could not be applied")
         }
     },
 

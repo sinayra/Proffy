@@ -47,7 +47,6 @@ describe('users : UserListResponse', () => {
                     users{
                         email
                     }
-                    error
                 }
             }
         `;
@@ -59,15 +58,13 @@ describe('users : UserListResponse', () => {
         expect(data.users).to.have.property('code');
         expect(data.users).to.have.property('success');
         expect(data.users).to.have.property('users');
-        expect(data.users).to.have.property('error');
 
         const {
-            code, success, users, error
+            code, success, users
         } = data.users;
 
         expect(code).to.equal('200');
         expect(success).to.be.true;
-        expect(error).to.be.null;
         expect(users).to.have.lengthOf(2);
 
         const [elem1, elem2] = users;
@@ -77,4 +74,39 @@ describe('users : UserListResponse', () => {
         expect(elem2).to.have.property('email', obj2.email);
         expect(elem2).to.not.have.property('name');
     });
+
+    it('Check error message when database connection is closed', async () => {
+        
+        await closeDbConnection();
+
+        const GET_USERS = gql`
+            query getUsers{
+                users {
+                    code
+                    success
+                    users{
+                        email
+                    }
+                }
+            }
+        `;
+
+        const { data } = await query({
+            query: GET_USERS
+        });
+
+        expect(data).to.have.property('users');
+        expect(data.users).to.have.property('code');
+        expect(data.users).to.have.property('success');
+        expect(data.users).to.have.property('users');
+
+        const {
+            code, success, users
+        } = data.users;
+
+        expect(code).to.equal('503');
+        expect(success).to.be.false;
+        expect(users).to.be.null
+       
+    }).timeout(15000);
 });
