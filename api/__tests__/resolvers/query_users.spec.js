@@ -22,6 +22,10 @@ describe('users : UserListResponse', () => {
         await closeDbConnection();
     });
 
+    beforeEach(async () => {
+        await dropTestDb();
+    });
+
     it('Get successful list of users', async () => {
         const obj1 = {
             name: 'John Doe',
