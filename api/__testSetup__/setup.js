@@ -16,6 +16,42 @@ const TeacherDBModel = require('../model/teacher');
 const StudentDBModel = require('../model/student');
 const ScheduleDBModel = require('../model/schedule');
 
+class Context {
+    constructor() {
+        this.req = {
+            body: {}
+        };
+
+        this.res = {
+            query: {},
+            headers: {},
+            data: null,
+            json(payload) {
+                this.data = JSON.stringify(payload);
+            },
+            cookie(name, value, options) {
+                this.headers[name] = value;
+            },
+            clearCookie(name){
+                this.headers[name] = "";
+            }
+        };
+
+        this.user = null;
+    }
+
+    getContext() {
+        return {
+            res: this.res,
+            user: this.user
+        }
+    }
+
+    setUser(user){
+        this.user = user
+    }
+}
+
 const apis = {
     userAPI: UserDBModel,
     studentAPI: StudentDBModel,
@@ -52,14 +88,13 @@ const closeDbConnection = async () => {
         .catch(error => console.error(error));
 }
 
+const context = new Context();
+
 const server = new ApolloServer({
     dataSources,
     typeDefs,
     resolvers,
-    context: ({ req, res }) => ({
-        req,
-        res,
-    }),
+    context,
 });
 
 module.exports = {
