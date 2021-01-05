@@ -10,7 +10,7 @@ const {
     userAPI
 } = apis;
 
-describe.only('logout: AuthResponse', () => {
+describe('logout: AuthResponse', () => {
 
     before(async () => {
         await connectToDb();
