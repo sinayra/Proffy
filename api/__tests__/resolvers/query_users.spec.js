@@ -94,7 +94,6 @@ describe('users : UserListResponse', () => {
         expect(data).to.have.property('users');
         expect(data.users).to.have.property('code', '503');
         expect(data.users).to.have.property('success', false);
-        expect(data.users).to.have.property('users').to.be.null;
 
         await connectToDb();
        

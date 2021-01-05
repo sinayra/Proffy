@@ -109,7 +109,6 @@ describe('students : StudentListResponse', () => {
         expect(data).to.have.property('students');
         expect(data.students).to.have.property('code', '503');
         expect(data.students).to.have.property('success', false);
-        expect(data.students).to.have.property('students').to.be.null;
 
         await connectToDb();
        
