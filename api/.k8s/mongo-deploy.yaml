@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proffy-db
+  name: proffy-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proffy-db-pod
+  template:
+    metadata:
+      labels:
+        app: proffy-db-pod
+    spec:
+      containers:
+      - name: proffy-db-pod
+        image: mongo
+        ports:
+          - containerPort: 27017

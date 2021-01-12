@@ -65,15 +65,13 @@ const server = new ApolloServer({
     }
 });
 
-console.log(process.env.MONGO_URL);
-
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
 });
 mongoose.connection.on('connected', function () {
-    console.log('Mongoose default connection open to localhost');
+    console.log('Mongoose default connection connected');
 });
 
 mongoose.connection.on('disconnected', function () {

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proffy-api
+  name: proffy-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proffy-api-pod
+  template:
+    metadata:
+      labels:
+        app: proffy-api-pod
+    spec: # below is pod
+      containers:
+        - name: proffy-api-pod
+          image: sinayra/proffy:latest
+          imagePullPolicy: Never
+          envFrom:
+            - secretRef:
+                name: prod-secrets
+          ports:
+          - containerPort: 4000
+      restartPolicy: Always
+        
+      
