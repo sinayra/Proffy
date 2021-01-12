@@ -23,6 +23,7 @@ const StudentDBModel = require('./model/student');
 const ScheduleDBModel = require('./model/schedule');
 
 const app = express();
+const url = process.env.NODE_ENV === 'production' ? process.env.MONGO_PROD_URL : process.env.MONGO_DEV_URL;
 
 const dataSources = () => ({
     userAPI: new UserAPI(UserDBModel),
@@ -65,7 +66,7 @@ const server = new ApolloServer({
     }
 });
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
