@@ -65,7 +65,9 @@ const server = new ApolloServer({
     }
 });
 
-mongoose.connect(`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@localhost:27017/${process.env.MONGODB_DATABASE}`, {
+console.log(process.env.MONGO_URL);
+
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true

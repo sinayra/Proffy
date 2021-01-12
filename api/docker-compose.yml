@@ -1,0 +1,28 @@
+version: "3"
+volumes:
+  mongodb_volume:
+
+networks:
+  backend-network:
+    external: false
+    name: 'backend-network'
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: ./node.dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - backend-network
+    env_file:
+      - ./.env
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodb_volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend-network
