@@ -23,7 +23,7 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID!
+    _id: ID!
     email: String!
     role: Role!
     name: String!
@@ -32,7 +32,7 @@ const typeDefs = gql`
   }
 
   type Teacher {
-    id: ID!
+    _id: ID!
     user: User!
     bio: String
     subject: String
@@ -43,12 +43,11 @@ const typeDefs = gql`
     TEACHER
     STUDENT
   }
-
 `;
 
 function generateUser() {
   const user: User = {
-    id: faker.random.uuid(),
+    _id: faker.random.uuid(),
     email: faker.internet.email(),
     role: Math.floor(Math.random() * Math.floor(100)) % 2 === 0 ? 'TEACHER' : 'STUDENT',
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -61,10 +60,10 @@ function generateUser() {
 
 function generateTeacher(user: User) {
   const teacher: Teacher = {
-    id: faker.random.uuid(),
+    _id: faker.random.uuid(),
     user,
     bio: faker.lorem.paragraphs(),
-    subject: faker.lorem.word(),
+    area: [faker.lorem.word()],
     price: faker.finance.amount(10, 50),
   }
 
