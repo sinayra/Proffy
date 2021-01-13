@@ -12,7 +12,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
     return (
         <article className="teacher-item">
             <header>
-                <img src={teacher.user.avatar} alt={teacher.user.name} />
+                <img src={`http://localhost:4000/${teacher.user.avatar}`} alt={teacher.user.name} />
                 <div>
                     <strong>{teacher.user.name}</strong>
                     <span>{teacher.subject}</span>

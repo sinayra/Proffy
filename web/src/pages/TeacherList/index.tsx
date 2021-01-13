@@ -8,29 +8,33 @@ import { Teacher } from '../../types/Teacher';
 import './styles.css';
 import TeacherItem from '../../components/TeacherItem';
 
-interface TeacherData {
-    teachers: Teacher[];
+interface ResponseData {
+    teachers: {
+        teachers: Teacher[]
+    }
 }
 
 const TEACHERS = gql`
     query getTeachers {
-      teachers @client {
-        id
-        user {
-            name
-            email
-            avatar
-            whatsapp
+      teachers {
+        teachers {
+            _id
+            user {
+                name
+                email
+                avatar
+                whatsapp
+            }
+            area
+            price
+            bio
         }
-        subject
-        price
-        bio
-      }
+        }
     }
   `;
 
 function TeacherList() {
-    const { loading, error, data } = useQuery<TeacherData>(TEACHERS);
+    const { loading, error, data } = useQuery<ResponseData>(TEACHERS);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
@@ -59,8 +63,8 @@ function TeacherList() {
             </PageHeader>
 
             <main>
-                {data?.teachers.map((teacher) => (
-                    <TeacherItem teacher={teacher} key={teacher.id} />
+                {data?.teachers.teachers.map((teacher) => (
+                    <TeacherItem teacher={teacher} key={teacher._id} />
                 ))}
             </main>
         </div>

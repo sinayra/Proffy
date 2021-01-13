@@ -11,23 +11,30 @@ import { Link } from 'react-router-dom';
 import './styles.css';
 
 interface User {
-  id: string;
+  _id: string;
 }
 
-interface UsersData {
-  users: User[];
+interface ResponseData {
+  users: {
+    code: string;
+    error: string;
+    success: boolean;
+    users: User[];
+  }
 }
 
 const USERS = gql`
   query getUsers {
-    users @client {
-      id
+    users {
+      users {
+        _id
+      }
     }
   }
 `;
 
 function Landing() {
-  const { loading, error, data } = useQuery<UsersData>(USERS);
+  const { loading, error, data } = useQuery<ResponseData>(USERS);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
@@ -54,7 +61,7 @@ function Landing() {
         </div>
 
         <span className="total-connections">
-          Total of {data?.users.length} connections made<img src={purpleHeartIcon} alt="Coração roxo" />
+          Total of {data?.users.users.length} connections made<img src={purpleHeartIcon} alt="Coração roxo" />
         </span>
       </div>
     </div>
