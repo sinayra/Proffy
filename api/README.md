@@ -5,7 +5,7 @@ docker build --file ./node.dockerfile -t sinayra/proffy:latest .
 
 # Create secrets from env file
 ```
-kubectl create secret generic prod-secrets --from-env-file=./.env
+kubectl create secret generic prod-secrets --from-env-file=./src/.env
 ```
 
 # Run

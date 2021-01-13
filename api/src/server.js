@@ -25,6 +25,11 @@ const ScheduleDBModel = require('./model/schedule');
 const app = express();
 const url = process.env.NODE_ENV === 'production' ? process.env.MONGO_PROD_URL : process.env.MONGO_DEV_URL;
 
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true
+}
+
 const dataSources = () => ({
     userAPI: new UserAPI(UserDBModel),
     studentAPI: new StudentAPI(StudentDBModel),
@@ -86,7 +91,14 @@ mongoose.connection.on('error', function (err) {
 mongoose.set('useFindAndModify', false);
 
 app.use(express.static('./assets'));
-server.applyMiddleware({ app, path: '/graphql' });
+server.applyMiddleware(
+    {
+        app,
+        path: '/graphql',
+        cors: corsOptions,
+    }
+);
+
 
 const httpServer = http.createServer(app);
 
