@@ -1,4 +1,4 @@
-export interface EnumArea {
+export interface Enum {
     __type: {
         enumValues: [
             {
