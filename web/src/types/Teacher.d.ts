@@ -4,5 +4,5 @@ export interface Teacher {
     bio?: String;
     subject?: String;
     price?: String;
-    area?: [String];
+    area?: String[];
 }

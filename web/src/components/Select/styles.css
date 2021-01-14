@@ -23,6 +23,10 @@
     font: 1.6rem Archivo;
 }
 
+.select-block select option{
+    font: 1.6rem Archivo;
+}
+
 .select-block:focus-within::after {
     width: calc(100% -3.2rem);
     height: 2px;
