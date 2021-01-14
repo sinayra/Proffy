@@ -7,12 +7,27 @@ import { Teacher } from '../../types/Teacher';
 
 import './styles.css';
 import TeacherItem from '../../components/TeacherItem';
+import Input from '../../components/Input';
+import Select from '../../components/Select';
+import { Enum } from '../../types/Enum';
+import weekdayOption from '../../util/weekdayOption';
 
 interface ResponseData {
     teachers: {
         teachers: Teacher[]
     }
 }
+
+const AREAENUM = gql`
+    query getAreaEnum{
+    __type(name: "Area"){
+        enumValues{
+        name
+        description
+        }
+    }
+    }
+`;
 
 const TEACHERS = gql`
     query getTeachers {
@@ -34,36 +49,33 @@ const TEACHERS = gql`
   `;
 
 function TeacherList() {
-    const { loading, error, data } = useQuery<ResponseData>(TEACHERS);
+    const resTeacher = useQuery<ResponseData>(TEACHERS);
+    const resEnumArea = useQuery<Enum>(AREAENUM);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    const teachers = resTeacher.data?.teachers.teachers;
+    const areaOptions = resEnumArea.data?.__type.enumValues.map((elem) => ({
+        value: elem.name,
+        label: elem.description
+    }));
+    
+
+    if (resTeacher.loading || resEnumArea.loading) return <p>Loading...</p>;
+    if (resTeacher.error || resEnumArea.loading) return <p>Error :(</p>;
 
     return (
         <div id="page-teacher-list" className="container">
             <PageHeader title="These are the Proffys availables.">
                 <form id="search-teachers">
 
-                    <div className="input-block">
-                        <label htmlFor="subject">Subject</label>
-                        <input type="text" id="subject" />
-                    </div>
-
-                    <div className="input-block">
-                        <label htmlFor="weekday">Weekday</label>
-                        <input type="text" id="weekday" />
-                    </div>
-
-                    <div className="input-block">
-                        <label htmlFor="hour">Hour</label>
-                        <input type="text" id="hour" />
-                    </div>
+                    <Select name="area" label="Study field" options={areaOptions} />
+                    <Select name="weekday" label="Weekday" options={weekdayOption} />
+                    <Input type="time" name="from" label="Start at" />
 
                 </form>
             </PageHeader>
 
             <main>
-                {data?.teachers.teachers.map((teacher) => (
+                {teachers?.map((teacher) => (
                     <TeacherItem teacher={teacher} key={teacher._id} />
                 ))}
             </main>
