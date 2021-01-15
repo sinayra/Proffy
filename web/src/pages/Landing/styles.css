@@ -65,7 +65,7 @@
     background: var(--color-primary-lighter);
 }
 
-.buttons-container a.teach {
+.buttons-container a.join {
     background: var(--color-secundary);
 }
 
@@ -73,7 +73,7 @@
     background: var(--color-primary-light);
 }
 
-.buttons-container a.teach:hover {
+.buttons-container a.join:hover {
     background: var(--color-secundary-dark);
 }
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import {
   ApolloProvider as Provider,
   ApolloClient,
@@ -6,12 +6,7 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 
-interface Props {
-  children: ReactNode;
-}
-
-
-function ApolloProvider({ children }: Props) {
+const ApolloProvider: React.FC = ( { children }) => {
 
   const httpLink = createHttpLink({
     uri: "http://localhost:4000/graphql",

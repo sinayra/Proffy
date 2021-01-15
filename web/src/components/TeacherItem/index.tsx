@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Teacher } from '../../types/Teacher';
+import { AuthContext } from '../../provider/AuthProvider';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
@@ -10,7 +11,8 @@ interface TeacherItemProps {
 
 const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
     const src = teacher.user.avatar.includes('http') ? teacher.user.avatar : `http://localhost:4000/${teacher.user.avatar}`;
-    
+    const auth = useContext(AuthContext);
+
     return (
         <article className="teacher-item">
             <header>
@@ -25,10 +27,12 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
 
             <footer>
                 <p>Price/Hour: <strong>{teacher.price}</strong></p>
-                <button type="button">
-                    <img src={whatsappIcon} alt="Whatsapp" />
-                    Contact me
-                </button>
+                {auth?.isStudent &&
+                    <button type="button">
+                        <img src={whatsappIcon} alt="Whatsapp" />
+                        Contact me
+                    </button>
+                }
             </footer>
         </article>
     )

@@ -3,7 +3,8 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import TeacherForm from './pages/TeacherForm';
 import TeacherList from './pages/TeacherList';
-
+import StudentForm from './pages/StudentForm';
+import Join from './pages/JoinForm';
 
 function Routes(){
 
@@ -11,7 +12,9 @@ function Routes(){
         <BrowserRouter>
             <Route path="/" exact component={Landing} />
             <Route path="/study" component={TeacherList} />
-            <Route path="/teach" component={TeacherForm} />
+            <Route path="/join" component={Join} />
+            <Route path="/student" component={StudentForm} />
+            <Route path="/teacher" component={TeacherForm} />
         </BrowserRouter>
     );
 }

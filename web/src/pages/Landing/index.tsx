@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 
+import { User } from '../../types/User';
 import logoImg from '../../assets/images/logo.svg';
 import landingImg from "../../assets/images/landing.svg";
 import studyIcon from "../../assets/images/icons/study.svg";
@@ -9,10 +10,6 @@ import purpleHeartIcon from "../../assets/images/icons/purple-heart.svg";
 import { Link } from 'react-router-dom';
 
 import './styles.css';
-
-interface User {
-  _id: string;
-}
 
 interface ResponseData {
   users: {
@@ -54,9 +51,9 @@ function Landing() {
             Study
           </Link>
 
-          <Link to="/teach" className="teach">
-            <img src={giveClassesIcon} alt="Teach" />
-            Teach
+          <Link to="/join" className="join">
+            <img src={giveClassesIcon} alt="Join" />
+            Join
           </Link>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useContext, useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { useHistory } from 'react-router-dom'
 import Input from '../../components/Input';
@@ -11,6 +11,7 @@ import Select from '../../components/Select';
 import { Enum } from '../../types/Enum';
 import weekdayOption from '../../util/weekdayOption';
 import { convertTimeStringToMinute } from '../../util/time';
+import { AuthContext } from '../../provider/AuthProvider';
 
 const AREAENUM = gql`
     query getAreaEnum{
@@ -52,6 +53,7 @@ interface Schedule {
 function TeacherForm() {
     const { loading, error, data } = useQuery<Enum>(AREAENUM);
     const history = useHistory();
+    const auth = useContext(AuthContext);
     const [scheduleItems, setScheduleItems] = useState<Schedule[]>([{ weekday: '', from: '', to: '' }]);
     const [name, setName] = useState("");
     const [avatar, setAvatar] = useState("");
@@ -93,10 +95,11 @@ function TeacherForm() {
                 schedules
             }
 
-            await signup({ variables: { account } });
+            const res = await signup({ variables: { account } });
             await update({ variables: { teacherInput } });
 
             alert('Congratulations! Your account has been successfully created!');
+            auth?.handleSetAuthInfo(res.data?.login.user);
             history.push('/');
         }
         catch (err) {
@@ -280,12 +283,12 @@ function TeacherForm() {
                     <footer>
                         <p>
                             <img src={warningIcon} alt="Important message" />
-                        Important! <br />
-                        Fill all the fields
-                    </p>
+                            Important! <br />
+                            Fill all the fields
+                        </p>
                         <button type="submit">
                             Save
-                    </button>
+                        </button>
                     </footer>
                 </form>
             </main>

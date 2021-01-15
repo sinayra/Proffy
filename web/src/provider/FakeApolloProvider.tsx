@@ -11,11 +11,6 @@ import faker from 'faker';
 import { User } from '../types/User';
 import { Teacher } from '../types/Teacher';
 
-interface Props {
-  children: ReactNode;
-}
-
-
 const typeDefs = gql`
   type Query {
     users: [User]
@@ -97,7 +92,7 @@ const resolvers: Resolvers = {
   }
 };
 
-function FakeApolloProvider({ children }: Props) {
+const FakeApolloProvider: React.FC = ( { children }) => {
 
   const httpLink = createHttpLink({
     uri: "http://localhost:4000/graphql",

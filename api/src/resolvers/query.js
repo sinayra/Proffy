@@ -70,6 +70,23 @@ module.exports = {
         }
     },
 
+    currentUser: async (parent, args, { dataSources, user }, info) => {
+        if(user !== null){
+            return {
+                code: 200,
+                success: true,
+                message: "User had been retrieved",
+                user: await dataSources.userAPI.getUserById(user._id)
+            }
+        }
+        return {
+            code: 400,
+            success: false,
+            message: "User not logged in",
+            user: null
+        }
+    },
+
     teacherByCurrentUser: async (parent, args, { dataSources, user }, info) => {
         return {
             code: 200,
