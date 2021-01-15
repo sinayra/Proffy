@@ -65,7 +65,7 @@ function StudentForm() {
             const res = await signup({ variables: { account } });
 
             alert('Congratulations! Your account has been successfully created!');
-            auth?.handleSetAuthInfo(res.data?.login.user);
+            auth?.setAuthInfo(res.data?.signup.user);
             history.push('/');
         }
         catch (err) {

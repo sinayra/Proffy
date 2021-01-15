@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { useQuery, gql } from '@apollo/client';
 import { User } from "../types/User";
 
 interface AuthContextProps {
     authInfo: User | null,
-    handleSetAuthInfo: (user: User | null) => void,
+    setAuthInfo: Dispatch<SetStateAction<User | null>>
     isAuthenticated: boolean,
     isTeacher: boolean,
     isStudent: boolean,
@@ -36,10 +36,6 @@ const AuthProvider: React.FC = ({ children }) => {
     const isTeacher = authInfo?.role === "TEACHER";
     const isStudent = authInfo?.role === "STUDENT";
 
-    const handleSetAuthInfo = (user: User | null) => {
-        setAuthInfo(user);
-    }
-
     useEffect(() => {
         if (authInfo === null && resUser.data && resUser.data.currentUser.user !== null) {
             setAuthInfo(resUser.data.currentUser.user);
@@ -47,7 +43,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }, [authInfo, resUser]);
 
     return (
-        <Provider value={{ authInfo, isAuthenticated, isTeacher, isStudent, handleSetAuthInfo }}>
+        <Provider value={{ authInfo, isAuthenticated, isTeacher, isStudent, setAuthInfo }}>
             {children}
         </Provider>
     );

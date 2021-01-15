@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Teacher } from '../../types/Teacher';
 import { AuthContext } from '../../provider/AuthProvider';
+import {  gql, useMutation } from '@apollo/client';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
@@ -9,9 +10,30 @@ interface TeacherItemProps {
     teacher: Teacher;
 }
 
+const ADD_CONNECTION = gql`
+    mutation addConnection($teacherId: ID!){
+        addTeacherStudentConnection(teacherId: $teacherId){
+            success
+            message
+            student{
+                _id
+            }
+        }
+    }
+`;
+
 const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
     const src = teacher.user.avatar.includes('http') ? teacher.user.avatar : `http://localhost:4000/${teacher.user.avatar}`;
+    const [addConnection] = useMutation(ADD_CONNECTION);
     const auth = useContext(AuthContext);
+
+    async function handleAddConnection(){
+        await addConnection({
+            variables: {
+                teacherId : teacher._id
+            }
+        });
+    }
 
     return (
         <article className="teacher-item">
@@ -28,10 +50,10 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
             <footer>
                 <p>Price/Hour: <strong>{teacher.price}</strong></p>
                 {auth?.isStudent &&
-                    <button type="button">
+                    <a target="_blank" rel="noreferrer" href={`https://wa.me/${teacher.user.whatsapp}`} type="button" onClick={handleAddConnection}>
                         <img src={whatsappIcon} alt="Whatsapp" />
                         Contact me
-                    </button>
+                    </a>
                 }
             </footer>
         </article>

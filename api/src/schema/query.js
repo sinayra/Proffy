@@ -5,7 +5,7 @@ type Query {
     "list of teachers"
     teachers(teacher: TeacherInput): TeacherListResponse
     "list of students"
-    students: StudentListResponse @requiresRole(role: "ADMIN")
+    students: StudentListResponse 
     "Get logged user information"
     currentUser: UserResponse
     "get teacher from the current user after them have logged in. Requires a teacher role account"

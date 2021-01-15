@@ -19,7 +19,7 @@ type StudentResponse implements MutationResponse {
 type Student {
     _id: ID!
     "reference a previous user account that has been created"
-    user: User!
+    user: User! @requiresRole(role: "ADMIN")
     favorites: [Teacher]!
     connected: [Teacher]!
 }

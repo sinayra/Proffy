@@ -64,7 +64,7 @@ function JoinForm() {
             }
 
             alert('Welcome back!');
-            auth?.handleSetAuthInfo(res.data?.login.user);
+            auth?.setAuthInfo(res.data?.login.user);
             history.push('/');
         }
         catch (err) {

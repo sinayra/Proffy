@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 
-import { User } from '../../types/User';
+import { Student } from '../../types/Student';
 import logoImg from '../../assets/images/logo.svg';
 import landingImg from "../../assets/images/landing.svg";
 import studyIcon from "../../assets/images/icons/study.svg";
@@ -12,29 +12,39 @@ import { Link } from 'react-router-dom';
 import './styles.css';
 
 interface ResponseData {
-  users: {
+  students: {
     code: string;
     error: string;
     success: boolean;
-    users: User[];
+    students: Student[];
   }
 }
 
-const USERS = gql`
-  query getUsers {
-    users {
-      users {
-        _id
+const CONNECTIONS = gql`
+  query getConnections {
+    students {
+      students {
+        connected {
+          _id
+        }
       }
     }
   }
 `;
 
 function Landing() {
-  const { loading, error, data } = useQuery<ResponseData>(USERS);
+  const { loading, error, data } = useQuery<ResponseData>(CONNECTIONS);
+  let total = 0;
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+
+  const students = data?.students.students;
+  if(students){
+    for(let i = 0; i < students?.length; i++){
+      total += students[i].connected.length;
+    }
+  }
 
   return (
     <div id="page-landing">
@@ -58,7 +68,7 @@ function Landing() {
         </div>
 
         <span className="total-connections">
-          Total of {data?.users.users.length} connections made<img src={purpleHeartIcon} alt="Coração roxo" />
+          Total of {total} connections made<img src={purpleHeartIcon} alt="Coração roxo" />
         </span>
       </div>
     </div>

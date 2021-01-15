@@ -207,7 +207,7 @@ module.exports = {
         let student;
 
         if (user.role === 'STUDENT') {
-            student = await dataSources.studentAPI.getStudentById(user._id);
+            student = await dataSources.studentAPI.getStudentByUser(user);
 
         }
         else {
@@ -247,7 +247,7 @@ module.exports = {
         let student;
 
         if (user.role === 'STUDENT') {
-            student = await dataSources.studentAPI.getStudentById(user._id);
+            student = await dataSources.studentAPI.getStudentByUser(user);
 
         }
         else {

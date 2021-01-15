@@ -17,6 +17,7 @@ interface PageHeaderProps {
 const LOGOUT_USER = gql`
     mutation logout{
         logout{
+            message
             success
         }
     }
@@ -29,7 +30,7 @@ const PageHeader: React.FC<PageHeaderProps> = (props) => {
 
     async function handleLogout() {
         await logout();
-        auth?.handleSetAuthInfo(null);
+        auth?.setAuthInfo(null);
     }
 
     return (

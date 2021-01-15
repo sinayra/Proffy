@@ -99,7 +99,7 @@ function TeacherForm() {
             await update({ variables: { teacherInput } });
 
             alert('Congratulations! Your account has been successfully created!');
-            auth?.handleSetAuthInfo(res.data?.login.user);
+            auth?.setAuthInfo(res.data?.login.user);
             history.push('/');
         }
         catch (err) {
