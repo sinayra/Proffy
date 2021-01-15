@@ -9,10 +9,12 @@ interface TeacherItemProps {
 }
 
 const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    const src = teacher.user.avatar.includes('http') ? teacher.user.avatar : `http://localhost:4000/${teacher.user.avatar}`;
+    
     return (
         <article className="teacher-item">
             <header>
-                <img src={`http://localhost:4000/${teacher.user.avatar}`} alt={teacher.user.name} />
+                <img src={src} alt={teacher.user.name} />
                 <div>
                     <strong>{teacher.user.name}</strong>
                     <span>{teacher.subject}</span>

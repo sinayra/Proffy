@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 
 import PageHeader from '../../components/PageHeader';
@@ -10,7 +10,8 @@ import TeacherItem from '../../components/TeacherItem';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import { Enum } from '../../types/Enum';
-import weekdayOption from '../../util/weekdayOption';
+import weekdayOptions from '../../util/weekdayOption';
+import { convertTimeStringToMinute } from '../../util/time';
 
 interface ResponseData {
     teachers: {
@@ -30,8 +31,8 @@ const AREAENUM = gql`
 `;
 
 const TEACHERS = gql`
-    query getTeachers {
-      teachers {
+    query getTeachers($teacher: TeacherInput) {
+      teachers(teacher: $teacher) {
         teachers {
             _id
             user {
@@ -49,17 +50,42 @@ const TEACHERS = gql`
   `;
 
 function TeacherList() {
-    const resTeacher = useQuery<ResponseData>(TEACHERS);
+    const [area, setArea] = useState("");
+    const [weekdayOption, setWeekdayOption] = useState("");
+    const [weekday, setWeekday] = useState<number | null>(null);
+    const [from, setFrom] = useState(0);
+
+    const resTeacher = useQuery<ResponseData>(TEACHERS, {
+        variables: {
+            teacher: {
+                area: area.length > 0 ? [area] : null,
+                schedules: weekday !== null ?
+                    [{
+                        weekday,
+                        from
+                    }] : 
+                    null
+            }
+        }
+    });
     const resEnumArea = useQuery<Enum>(AREAENUM);
 
-    const teachers = resTeacher.data?.teachers.teachers;
     const areaOptions = resEnumArea.data?.__type.enumValues.map((elem) => ({
         value: elem.name,
         label: elem.description
     }));
-    
+    const teachers = resTeacher.data?.teachers.teachers;
 
-    if (resTeacher.loading || resEnumArea.loading) return <p>Loading...</p>;
+    async function resetSearch(e: FormEvent) {
+        e.preventDefault();
+
+        setArea("");
+        setWeekdayOption("")
+        setFrom(0);
+    }
+
+
+    //if (resTeacher.loading || resEnumArea.loading) return <p>Loading...</p>;
     if (resTeacher.error || resEnumArea.loading) return <p>Error :(</p>;
 
     return (
@@ -67,9 +93,43 @@ function TeacherList() {
             <PageHeader title="These are the Proffys availables.">
                 <form id="search-teachers">
 
-                    <Select name="area" label="Study field" options={areaOptions} />
-                    <Select name="weekday" label="Weekday" options={weekdayOption} />
-                    <Input type="time" name="from" label="Start at" />
+                    <Select
+                        name="area"
+                        label="Study field"
+                        options={areaOptions}
+                        value={area}
+                        onChange={
+                            (e) => {
+                                setArea(e.target.value)
+                            }
+                        }
+                    />
+                    <Select
+                        name="weekday"
+                        label="Weekday"
+                        options={weekdayOptions}
+                        value={weekdayOption}
+                        onChange={
+                            (e) => {
+                                setWeekdayOption(e.target.value);
+                                setWeekday(parseInt(e.target.value));
+                            }
+                        }
+                    />
+                    <Input
+                        type="time"
+                        name="from"
+                        label="Start at"
+                        value={from}
+                        onChange={
+                            (e) => {
+                                setFrom(convertTimeStringToMinute(e.target.value));
+                            }
+                        }
+                    />
+                    <button type="submit" onClick={resetSearch}>
+                        Reset search
+                    </button>
 
                 </form>
             </PageHeader>

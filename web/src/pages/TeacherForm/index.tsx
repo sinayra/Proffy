@@ -10,6 +10,7 @@ import Textarea from '../../components/Textarea';
 import Select from '../../components/Select';
 import { Enum } from '../../types/Enum';
 import weekdayOption from '../../util/weekdayOption';
+import { convertTimeStringToMinute } from '../../util/time';
 
 const AREAENUM = gql`
     query getAreaEnum{
@@ -78,16 +79,10 @@ function TeacherForm() {
 
             const schedules = scheduleItems.map(elem => {
 
-                const fromString = elem.from.split(':');
-                const toString = elem.to.split(':');
-
-                const from = (+fromString[0] * 60 + (+fromString[1]));
-                const to = (+toString[0] * 60 + (+toString[1]));
-
                 return {
                     weekday: parseInt(elem.weekday),
-                    from,
-                    to
+                    from: convertTimeStringToMinute(elem.from),
+                    to: convertTimeStringToMinute(elem.to)
                 }
             })
 
