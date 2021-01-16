@@ -63,8 +63,6 @@ class ScheduleAPI extends DataSource {
     }
 
     async deleteSchedule(id) {
-        console.log("DELETE");
-        console.log(id);
         return await this.db.findByIdAndDelete(id);
     }
 }
