@@ -36,9 +36,14 @@ const AuthProvider: React.FC = ({ children }) => {
     const isTeacher = authInfo?.role === "TEACHER";
     const isStudent = authInfo?.role === "STUDENT";
 
+    //Workaround to get user info from cookie
     useEffect(() => {
-        if (authInfo === null && resUser.data && resUser.data.currentUser.user !== null) {
-            setAuthInfo(resUser.data.currentUser.user);
+        if(authInfo === null){
+            resUser.refetch();
+
+            if (resUser.data && resUser.data.currentUser.user !== null) {
+                setAuthInfo(resUser.data.currentUser.user);
+            }
         }
     }, [authInfo, resUser]);
 

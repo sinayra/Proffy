@@ -97,9 +97,9 @@ function TeacherForm() {
 
             const res = await signup({ variables: { account } });
             await update({ variables: { teacherInput } });
-
+            
+            auth?.setAuthInfo(res.data?.signup.user);
             alert('Congratulations! Your account has been successfully created!');
-            auth?.setAuthInfo(res.data?.login.user);
             history.push('/');
         }
         catch (err) {

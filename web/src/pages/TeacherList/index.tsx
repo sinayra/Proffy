@@ -79,6 +79,7 @@ function TeacherList() {
     async function resetSearch(e: FormEvent) {
         e.preventDefault();
 
+        resTeacher.refetch();
         setArea("");
         setWeekdayOption("")
         setFrom(0);
