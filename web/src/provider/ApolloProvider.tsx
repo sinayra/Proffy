@@ -9,7 +9,7 @@ import {
 const ApolloProvider: React.FC = ( { children }) => {
 
   const httpLink = createHttpLink({
-    uri: "http://localhost:4000/graphql",
+    uri: "http://localhost:31111/graphql",
     credentials: "include"
   });
 
