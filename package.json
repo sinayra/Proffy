@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "apollo-datasource": "^0.7.2",
-    "apollo-server": "^2.19.1"
-  }
-}
