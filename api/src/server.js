@@ -26,7 +26,7 @@ const app = express();
 const url = process.env.NODE_ENV === 'production' ? process.env.MONGO_PROD_URL : process.env.MONGO_DEV_URL;
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://sinayra-webapp.azurewebsites.net/'],
     credentials: true
 }
 
