@@ -45,6 +45,9 @@ module.exports = {
                 sameSite: true,
                 secure: true
             });
+            res.cookie('tokenlegacy', token, {
+                secure: true
+            });
 
             return {
                 code: 201,
@@ -66,6 +69,7 @@ module.exports = {
     logout: async (parent, args, { dataSources, res, user }, info) => {
         if (user) {
             res.clearCookie("token");
+            res.clearCookie("tokenlegacy");
             return {
                 code: 204,
                 success: true,
@@ -108,6 +112,9 @@ module.exports = {
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: true,
+            secure: true
+        });
+        res.cookie('tokenlegacy', token, {
             secure: true
         });
 

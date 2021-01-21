@@ -57,7 +57,7 @@ const server = new ApolloServer({
         let user = null;
 
         if (req && req.cookies) {
-            const token = req.cookies.token;
+            const token = req.cookies.token || req.cookies.tokenlegacy;
             if (token) {
                 const payload = auth.verifyToken(token);
                 user = payload;
