@@ -32,7 +32,7 @@ const AuthProvider: React.FC = ({ children }) => {
     const [authInfo, setAuthInfo] = React.useState<User | null>(null);
     const resUser = useQuery(GETUSER);
 
-    const isAuthenticated = authInfo !== null ? true : false;
+    const isAuthenticated = authInfo !== null && Object.keys(authInfo).length > 0 ? true : false;
     const isTeacher = authInfo?.role === "TEACHER";
     const isStudent = authInfo?.role === "STUDENT";
 

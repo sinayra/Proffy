@@ -63,8 +63,8 @@ function JoinForm() {
                 throw new Error (res.data.login.message);
             }
 
-            alert('Welcome back!');
             auth?.setAuthInfo(res.data?.login.user);
+            alert('Welcome back!');
             history.push('/');
         }
         catch (err) {

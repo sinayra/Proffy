@@ -33,13 +33,11 @@ const CONNECTIONS = gql`
 `;
 
 function Landing() {
-  const { loading, error, data } = useQuery<ResponseData>(CONNECTIONS, { pollInterval: 5000 });
+  const { loading, error, data } = useQuery<ResponseData>(CONNECTIONS, { pollInterval: 10000 });
   let total = 0;
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-
-    console.log(data);
 
   const students = data?.students.students;
   if(students){

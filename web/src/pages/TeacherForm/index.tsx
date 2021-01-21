@@ -27,6 +27,8 @@ const AREAENUM = gql`
 const SIGNUP_USER = gql`
     mutation signup_user($account: SignupInput!){
     signup(account: $account){
+            success
+            message
             user{
                 _id
             }
@@ -37,6 +39,8 @@ const SIGNUP_USER = gql`
 const UPDATE_TEACHER = gql`
     mutation update_teacher($teacherInput: TeacherInput!){
     updateTeacher(teacherInput: $teacherInput){
+            success
+            message
             teacher{
                 _id
             }
@@ -95,10 +99,18 @@ function TeacherForm() {
                 schedules
             }
 
-            const res = await signup({ variables: { account } });
-            await update({ variables: { teacherInput } });
+            const resSignup = await signup({ variables: { account } });
             
-            auth?.setAuthInfo(res.data?.signup.user);
+            if(!resSignup.data.signup.success){
+                throw new Error (resSignup.data.signup.message);
+            }
+            const resUpdate = await update({ variables: { teacherInput } });
+
+            if(!resUpdate.data.updateTeacher.success){
+                throw new Error (resUpdate.data.updateTeacher.message);
+            }
+            
+            auth?.setAuthInfo(resSignup.data?.signup.user);
             alert('Congratulations! Your account has been successfully created!');
             history.push('/');
         }

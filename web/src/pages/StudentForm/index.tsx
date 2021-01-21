@@ -23,6 +23,8 @@ const AREAENUM = gql`
 const SIGNUP_USER = gql`
     mutation signup_user($account: SignupInput!){
     signup(account: $account){
+            success
+            message
             user{
                 _id
                 name
@@ -61,11 +63,14 @@ function StudentForm() {
                 role: "STUDENT"
             };
 
-
             const res = await signup({ variables: { account } });
 
-            alert('Congratulations! Your account has been successfully created!');
+            if(!res.data.signup.success){
+                throw new Error (res.data.signup.message);
+            }
+
             auth?.setAuthInfo(res.data?.signup.user);
+            alert('Congratulations! Your account has been successfully created!');
             history.push('/');
         }
         catch (err) {
