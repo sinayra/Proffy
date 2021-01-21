@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha __tests__/**/*.spec.js",
     "database": "D:\\MongoDB\\Server\\4.2\\bin\\mongod.exe --dbpath \"D:\\MongoDB\\data\"",
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
