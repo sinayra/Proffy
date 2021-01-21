@@ -9,7 +9,7 @@ import {
 const ApolloProvider: React.FC = ( { children }) => {
 
   const httpLink = createHttpLink({
-    uri: "http://localhost:31111/graphql",
+    uri: "https://backend-sinayra.azurewebsites.net/graphql",
     credentials: "include"
   });
 

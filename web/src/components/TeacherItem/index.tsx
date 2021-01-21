@@ -23,7 +23,7 @@ const ADD_CONNECTION = gql`
 `;
 
 const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
-    const src = teacher.user.avatar.includes('http') ? teacher.user.avatar : `http://localhost:4000/${teacher.user.avatar}`;
+    const src = teacher.user.avatar.includes('http') ? teacher.user.avatar : `https://backend-sinayra.azurewebsites.net/${teacher.user.avatar}`;
     const [addConnection] = useMutation(ADD_CONNECTION);
     const auth = useContext(AuthContext);
 
