@@ -6,7 +6,7 @@ enum Role {
     STUDENT
 }
 
-"Teacher accepted study's fields"
+"Teacher possibles study's fields"
 enum Area {
     "Biology"
     BIOLOGY
